@@ -1,3 +1,30 @@
+.btn {
+  letter-spacing: 1;
+  display: block;
+  width: max-content;
+  margin: 0 auto;
+  padding: 8px 12px;
+}
+
+.btn-main {
+  background-color: #347de3;
+}
+
+.btn-underneath {
+  width: 0;
+  height: 0;
+}
+
+.btn-underneath:hover {
+  width: max-content;
+  height: auto;
+}
+
+/*
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+}
+*/

@@ -1,12 +1,7 @@
-import { Outlet } from 'react-router-dom'
+interface LayoutProps {
+  children: JSX.Element
+}
 
-export const Layout = () => {
-  return (
-    <div className="font-bold">
-      root component here
-      <div>
-        <Outlet />
-      </div>
-    </div>
-  )
+export const Layout = ({ children }: LayoutProps) => {
+  return <div className="font-bold">{children}</div>
 }

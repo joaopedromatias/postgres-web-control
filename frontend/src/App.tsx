@@ -1,17 +1,17 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import * as root from './routes/root'
-import { Layout } from './components/Layout'
+import { Login } from './components/Login'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout />,
+    element: <root.Index />,
+    loader: root.loader,
     shouldRevalidate: () => false,
     children: [
       {
         index: true,
-        element: <root.Index />,
-        loader: root.loader
+        element: <Login />
       }
     ]
   }
