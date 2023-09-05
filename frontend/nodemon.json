@@ -1,0 +1,8 @@
+{
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "watch": ["src"],
+  "ext": ".tsx",
+  "exec": "npm run build"
+}

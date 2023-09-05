@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "sourceMap": true,
+    "target": "es2018",
+    "module": "commonjs",
+    "rootDir": ".",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowJs": false,
+    "removeComments": true,
+    "newLine": "lf",
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "useDefineForClassFields": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "lib": ["esnext"]
+  },
+  "include": ["./src/**/*.ts"],
+  "ts-node": {
+    "files": true
+  }
+}

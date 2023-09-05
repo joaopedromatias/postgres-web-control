@@ -1,0 +1,48 @@
+{
+  "env": {
+    "es2021": true,
+    "node": true,
+    "jest": true
+  },
+  "extends": [
+    "standard",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:jest/recommended",
+    "plugin:node/recommended",
+    "plugin:promise/recommended",
+    "prettier"
+  ],
+  "plugins": ["jest", "prettier", "@typescript-eslint", "node", "import", "promise"],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts"]
+      }
+    }
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "rules": {
+    "node/no-unsupported-features/es-syntax": "off",
+    "@typescript-eslint/no-namespace": "off",
+    "node/no-missing-import": [
+      "error",
+      {
+        "tryExtensions": [".js", ".ts"]
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "_",
+        "varsIgnorePattern": "_"
+      }
+    ]
+  }
+}
