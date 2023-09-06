@@ -1,19 +1,19 @@
-import io from 'socket.io-client'
 import { Layout } from '../components/Layout'
 import { Outlet, useLoaderData } from 'react-router-dom'
+import { RouteLoader } from '../types'
 
-export const loader = () => {
-  io()
-  console.log('root loader running')
-  return true
+export const loader: RouteLoader = (socket, loaderArgs) => {
+  console.log('root loader')
+  console.log(socket)
+  console.log(loaderArgs)
+  return socket
 }
 
 export const Index = () => {
-  const loaderData = useLoaderData()
-  console.log('loader data:', loaderData)
+  const socket = useLoaderData() as ReturnType<typeof loader>
   return (
     <Layout>
-      <Outlet />
+      <Outlet context={socket} />
     </Layout>
   )
 }
