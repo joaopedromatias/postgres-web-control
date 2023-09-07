@@ -1,5 +1,8 @@
+import { useEffect, useState } from 'react'
 import { RouteLoader } from '../types'
 import { Button } from './Button'
+import { Input } from './Input'
+import { Form } from 'react-router-dom'
 
 export const loader: RouteLoader = () => {
   console.log('login loader')
@@ -7,8 +10,29 @@ export const loader: RouteLoader = () => {
 }
 
 const Login = () => {
+  const [isDisabled, setIsDisabled] = useState(true)
+  const handleFormInput = () => {
+    const formElements = document.forms[0].elements
+    const inputFormElements = [...formElements].filter((element) => element.tagName === 'INPUT')
+    const inputFormElementsLen = inputFormElements.length
+    let countHasValue = 0
+    for (let i = 0; i < inputFormElementsLen; i++) {
+      const elementValue = (formElements[i] as HTMLInputElement).value
+      if (elementValue) countHasValue++
+    }
+    if (countHasValue === inputFormElementsLen) {
+      return setIsDisabled(false)
+    }
+    setIsDisabled(true)
+  }
+  useEffect(() => {
+    document.forms[0].addEventListener('input', handleFormInput)
+    return () => {
+      document.forms[0].removeEventListener('input', handleFormInput)
+    }
+  }, [])
   return (
-    <div className="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-2/3 p-[20px] rounded-md border border-slate-300">
+    <Form className="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-2/3 p-[20px] rounded-md border border-slate-300">
       <div
         style={{
           display: 'flex',
@@ -17,15 +41,13 @@ const Login = () => {
           justifyContent: 'center'
         }}
       >
-        <span style={{ fontFamily: 'monospace', fontSize: '1.1rem', color: '#333' }}>
-          Login to your database
-        </span>
-        <input type="text" name="database name" placeholder="database..." />
-        <input type="text" name="username" placeholder="username" />
-        <input type="password" name="password" placeholder="password..." />
-        <Button />
+        <span className="font-mono text-lg text-slate-800">Login to your database</span>
+        <Input name="database" placeholder="database name..." type="text" />
+        <Input name="username" placeholder="username..." type="text" />
+        <Input name="password" placeholder="password..." type="password" />
+        <Button type="submit" isDisabled={isDisabled} />
       </div>
-    </div>
+    </Form>
   )
 }
 

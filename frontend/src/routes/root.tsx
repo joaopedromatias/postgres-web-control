@@ -2,10 +2,8 @@ import { Layout } from '../components/Layout'
 import { Outlet, useLoaderData } from 'react-router-dom'
 import { RouteLoader } from '../types'
 
-export const loader: RouteLoader = (socket, loaderArgs) => {
+export const loader: RouteLoader = (socket, _) => {
   console.log('root loader')
-  console.log(socket)
-  console.log(loaderArgs)
   return socket
 }
 
