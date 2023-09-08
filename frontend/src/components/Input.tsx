@@ -32,10 +32,7 @@ export const Input = ({ name, placeholder, type, validValues }: Props) => {
         placeholder={placeholder}
       />
       {errorMessage && (
-        <span
-          style={{ textAlign: 'left', color: 'red', fontSize: '0.85rem', lineHeight: '0.8rem' }}
-          role="alert"
-        >
+        <span className="text-left text-red-500 text-sm leading-3" role="alert">
           {errorMessage}
         </span>
       )}

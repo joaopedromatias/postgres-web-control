@@ -1,39 +1,23 @@
-import { useState } from 'react'
-
 interface Props {
   isDisabled: boolean
   type: 'button' | 'submit'
+  text: string
+  onClick?: () => void
 }
 
-export const Button = ({ isDisabled, type }: Props) => {
-  const [isHovered, setIsHovered] = useState(false)
+export const Button = ({ isDisabled, type, text, onClick }: Props) => {
   return (
     <button
+      onClick={onClick}
       type={type}
-      onMouseOver={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       disabled={isDisabled}
+      className="hover:-translate-x-1 hover:-translate-y-1 hover:cursor-pointer h-[40px] hover:border-solid hover:border-r-4 hover:border-b-4 hover:border-slate-900 transition-all ease-in-out duration-100 tracking-wider w-max block m-auto py-[8px] px-[12px] text-lg font-bold"
       style={{
-        cursor: 'pointer',
-        transform: isHovered ? 'translate(-2px, -2px)' : 'none',
-        borderTop: 'none',
-        borderLeft: 'none',
-        borderRight: isHovered ? 'solid 5px #222' : 'none',
-        borderBottom: isHovered ? 'solid 5px #222' : 'none',
-        height: 40,
-        transition: 'all .1s ease-in-out',
-        letterSpacing: 1,
-        width: 'max-content',
-        display: 'block',
-        margin: 'auto',
-        padding: '8px 12px',
-        backgroundColor: isDisabled ? 'lightgray' : '#347de3',
-        fontSize: '1.1rem',
-        fontWeight: 'bold',
-        fontFamily: 'monospace'
+        cursor: isDisabled ? 'not-allowed' : 'pointer',
+        backgroundColor: isDisabled ? 'lightgray' : '#347de3'
       }}
     >
-      Login
+      {text}
     </button>
   )
 }

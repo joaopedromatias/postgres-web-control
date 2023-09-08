@@ -6,12 +6,14 @@ import { io } from 'socket.io-client'
 import { Socket } from 'socket.io'
 
 export const loader = ({ request }: LoaderFunctionArgs) => {
+  const socket = io()
   const url = new URL(request.url)
   const formData = Object.fromEntries(url.searchParams)
 
-  let dbParameters = {}
+  let dbParameters = {} as Record<string, string | null>
+  const nbOfRequiredParameters = 5
 
-  if (Object.keys(formData).length > 0) {
+  if (Object.keys(formData).length >= nbOfRequiredParameters) {
     dbParameters = formData
   } else {
     dbParameters = {
@@ -23,18 +25,29 @@ export const loader = ({ request }: LoaderFunctionArgs) => {
     }
   }
 
-  const socket = io()
-
-  socket.emit('connectClient', { ...dbParameters })
-  const isConnectedToDbPromise = new Promise((res, rej) => {
-    try {
-      socket.on('isConnectedToDb', (isConnectedToDb: boolean) => {
-        res(isConnectedToDb)
-      })
-    } catch (err) {
-      rej(err)
+  let countValues = 0
+  Object.keys(dbParameters).forEach((key) => {
+    if (dbParameters[key]) {
+      countValues++
     }
   })
+
+  let isConnectedToDbPromise = {} as Promise<boolean>
+
+  if (countValues >= nbOfRequiredParameters) {
+    socket.emit('connectClientToDb', { ...dbParameters })
+    isConnectedToDbPromise = new Promise((res, rej) => {
+      try {
+        socket.on('isConnectedToDb', (isConnectedToDb: boolean) => {
+          res(isConnectedToDb)
+        })
+      } catch (err) {
+        rej(err)
+      }
+    })
+  } else {
+    isConnectedToDbPromise = Promise.resolve(false)
+  }
 
   return defer({ isConnectedToDbPromise, socket })
 }
@@ -50,6 +63,7 @@ const Index = () => {
   useEffect(() => {
     isConnectedToDbPromise.then((isConnectedToDb: boolean) => {
       setIsLoading(false)
+      console.log('isConnectedToDb:', isConnectedToDb)
       if (isConnectedToDb) {
         navigate('/app')
       } else {

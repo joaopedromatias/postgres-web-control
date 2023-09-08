@@ -4,11 +4,9 @@ import fp from 'fastify-plugin'
 import fastifyStatic from '@fastify/static'
 import path from 'path'
 
-import type { Sequelize } from 'sequelize'
 import { Server } from 'socket.io'
 
-import { db } from './plugins/db'
-import { connectedApp } from './connectedAoo'
+import { db } from './db'
 
 declare global {
   namespace NodeJS {
@@ -21,9 +19,7 @@ declare global {
 
 declare module 'fastify' {
   interface FastifyInstance {
-    getSequelize: () => Sequelize | null
-    isConnectedToDb: () => boolean | null
-    getSocket: () => Server
+    getSocketServer: () => Server
   }
 }
 
@@ -34,7 +30,7 @@ const frontEndRoot = path.join(process.cwd(), 'frontend', 'dist')
 const start = async () => {
   await fastify.register(fastifyHelmet)
 
-  fastify.decorate('getSocket', function () {
+  fastify.decorate('getSocketServer', function () {
     return io
   })
 
@@ -43,8 +39,6 @@ const start = async () => {
   await fastify.register(fastifyStatic, {
     root: frontEndRoot
   })
-
-  await fastify.register(connectedApp)
 
   fastify.setNotFoundHandler((req, res) => {
     res.sendFile('index.html', frontEndRoot)
