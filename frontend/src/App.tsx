@@ -1,7 +1,6 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import * as login from './routes/login'
 import * as root from './routes/root'
-import * as $404 from './routes/404'
 import * as app from './routes/app'
 import { Error } from './components/Error'
 
@@ -20,10 +19,6 @@ const router = createBrowserRouter([
       {
         path: '/app',
         element: <app.default />
-      },
-      {
-        path: '*',
-        element: <$404.default />
       }
     ]
   }
