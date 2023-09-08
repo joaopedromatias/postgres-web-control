@@ -11,30 +11,22 @@ export const loader = ({ request }: LoaderFunctionArgs) => {
   const formData = Object.fromEntries(url.searchParams)
 
   let dbParameters = {} as Record<string, string | null>
-  const nbOfRequiredParameters = 5
+  const requiredParameters = ['dialect', 'username', 'password', 'database', 'port']
+  const nbOfRequiredParameters = requiredParameters.length
 
-  if (Object.keys(formData).length >= nbOfRequiredParameters) {
-    dbParameters = formData
+  if (Object.keys(formData).every((key) => requiredParameters.includes(key) && formData[key])) {
+    dbParameters = { ...formData }
   } else {
-    dbParameters = {
-      database: window.sessionStorage.getItem('database'),
-      username: window.sessionStorage.getItem('username'),
-      password: window.sessionStorage.getItem('password'),
-      port: window.sessionStorage.getItem('port'),
-      dialect: window.sessionStorage.getItem('dialect')
-    }
+    requiredParameters.forEach((parameter) => {
+      const parameterValue = window.sessionStorage.getItem(parameter)
+      if (parameterValue) dbParameters[parameter] = parameterValue
+    })
   }
 
-  let countValues = 0
-  Object.keys(dbParameters).forEach((key) => {
-    if (dbParameters[key]) {
-      countValues++
-    }
-  })
-
+  const shouldTryConnection = Object.keys(dbParameters).length === nbOfRequiredParameters
   let isConnectedToDbPromise = {} as Promise<boolean>
 
-  if (countValues >= nbOfRequiredParameters) {
+  if (shouldTryConnection) {
     socket.emit('connectClientToDb', { ...dbParameters })
     isConnectedToDbPromise = new Promise((res, rej) => {
       try {
@@ -61,15 +53,17 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    isConnectedToDbPromise.then((isConnectedToDb: boolean) => {
-      setIsLoading(false)
-      console.log('isConnectedToDb:', isConnectedToDb)
-      if (isConnectedToDb) {
-        navigate('/app')
-      } else {
+    isConnectedToDbPromise
+      .then((isConnectedToDb: boolean) => {
+        if (isConnectedToDb) return navigate('/app')
         navigate('/login')
-      }
-    })
+      })
+      .catch((err) => {
+        throw err
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }, [])
 
   return <Layout>{isLoading ? <Loading /> : <Outlet context={socket} />}</Layout>

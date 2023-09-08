@@ -7,6 +7,9 @@ export async function db(fastify: FastifyInstance, _: FastifyPluginOptions) {
   io.on('connection', (socket) => {
     console.log(`The client ${socket.id} connected`)
 
+    let sequelize = null as Sequelize | null
+    let isConnectedToDb = false
+
     socket.on('disconnect', async () => {
       try {
         console.log(`The client ${socket.id} disconnected`)
@@ -17,9 +20,6 @@ export async function db(fastify: FastifyInstance, _: FastifyPluginOptions) {
         console.error(err)
       }
     })
-
-    let sequelize = null as Sequelize | null
-    let isConnectedToDb = false
 
     socket.on('connectClientToDb', async (msg) => {
       try {

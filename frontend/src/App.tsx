@@ -3,6 +3,7 @@ import * as login from './routes/login'
 import * as root from './routes/root'
 import * as $404 from './routes/404'
 import * as app from './routes/app'
+import { Error } from './components/Error'
 
 const router = createBrowserRouter([
   {
@@ -10,6 +11,7 @@ const router = createBrowserRouter([
     element: <root.default />,
     loader: root.loader,
     shouldRevalidate: () => false,
+    errorElement: <Error />,
     children: [
       {
         path: '/login',
