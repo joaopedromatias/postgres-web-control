@@ -2,13 +2,10 @@ import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import { Sequelize } from 'sequelize'
 
 export async function db(fastify: FastifyInstance, _: FastifyPluginOptions) {
-  const io = fastify.getSocketServer()
+  const io = fastify.getIOServer()
 
   io.on('connection', (socket) => {
     console.log(`The client ${socket.id} connected`)
-
-    let sequelize = null as Sequelize | null
-    let isConnectedToDb = false
 
     socket.on('disconnect', async () => {
       try {
@@ -20,6 +17,9 @@ export async function db(fastify: FastifyInstance, _: FastifyPluginOptions) {
         console.error(err)
       }
     })
+
+    let sequelize = null as Sequelize | null
+    let isConnectedToDb = false
 
     socket.on('connectClientToDb', async (msg) => {
       try {

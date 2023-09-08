@@ -1,12 +1,10 @@
-import fastifyHelmet from '@fastify/helmet'
 import Fastify from 'fastify'
-import fp from 'fastify-plugin'
-import fastifyStatic from '@fastify/static'
-import path from 'path'
-
+import fastifyHelmet from '@fastify/helmet'
+import fastifyPlugin from 'fastify-plugin'
 import { Server } from 'socket.io'
 
-import { db } from './db'
+import { db } from './plugins/db'
+import { staticfFiles } from './plugins/staticFiles'
 
 declare global {
   namespace NodeJS {
@@ -19,37 +17,30 @@ declare global {
 
 declare module 'fastify' {
   interface FastifyInstance {
-    getSocketServer: () => Server
+    getIOServer: () => Server
   }
 }
 
 const fastify = Fastify({ ignoreTrailingSlash: true })
 const io = new Server(fastify.server)
-const frontEndRoot = path.join(process.cwd(), 'frontend', 'dist')
 
 const start = async () => {
   await fastify.register(fastifyHelmet)
 
-  fastify.decorate('getSocketServer', function () {
+  fastify.decorate('getIOServer', function () {
     return io
   })
 
-  await fastify.register(fp(db))
+  await fastify.register(fastifyPlugin(db))
 
-  await fastify.register(fastifyStatic, {
-    root: frontEndRoot
-  })
-
-  fastify.setNotFoundHandler((req, res) => {
-    res.sendFile('index.html', frontEndRoot)
-  })
+  await fastify.register(fastifyPlugin(staticfFiles))
 
   fastify.setErrorHandler(function (error, _, reply) {
     console.error(error)
     reply.send(error)
   })
 
-  fastify.listen({ port: Number(process.env.PORT) || 3000, host: '127.0.0.1' }, (err, address) => {
+  fastify.listen({ port: Number(process.env.PORT) || 3000, host: '0.0.0.0' }, (err, address) => {
     if (err) {
       throw err
     } else {
