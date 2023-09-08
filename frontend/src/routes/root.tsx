@@ -56,7 +56,6 @@ const Index = () => {
         navigate('/login')
       }
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return <Layout>{isLoading ? <Loading /> : <Outlet context={socket} />}</Layout>
