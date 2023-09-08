@@ -3,11 +3,12 @@ import Fastify from 'fastify'
 import fp from 'fastify-plugin'
 import fastifyStatic from '@fastify/static'
 import path from 'path'
+
+import type { Sequelize } from 'sequelize'
 import { Server } from 'socket.io'
 
-import type { S3Client } from '@aws-sdk/client-s3'
-
 import { db } from './plugins/db'
+import { connectedApp } from './connectedAoo'
 
 declare global {
   namespace NodeJS {
@@ -20,24 +21,33 @@ declare global {
 
 declare module 'fastify' {
   interface FastifyInstance {
-    getS3Client: () => S3Client
+    getSequelize: () => Sequelize | null
+    isConnectedToDb: () => boolean | null
+    getSocket: () => Server
   }
 }
 
 const fastify = Fastify({ ignoreTrailingSlash: true })
 const io = new Server(fastify.server)
+const frontEndRoot = path.join(process.cwd(), 'frontend', 'dist')
 
 const start = async () => {
   await fastify.register(fastifyHelmet)
 
+  fastify.decorate('getSocket', function () {
+    return io
+  })
+
   await fastify.register(fp(db))
 
   await fastify.register(fastifyStatic, {
-    root: path.join(process.cwd(), 'frontend', 'dist')
+    root: frontEndRoot
   })
 
-  io.on('connection', (_) => {
-    console.log('a user connected')
+  await fastify.register(connectedApp)
+
+  fastify.setNotFoundHandler((req, res) => {
+    res.sendFile('index.html', frontEndRoot)
   })
 
   fastify.setErrorHandler(function (error, _, reply) {

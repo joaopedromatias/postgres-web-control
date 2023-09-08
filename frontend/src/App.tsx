@@ -1,31 +1,34 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import io from 'socket.io-client'
-import type { Socket } from 'socket.io-client'
+import * as login from './routes/login'
 import * as root from './routes/root'
-import * as login from './components/Login'
+import * as $404 from './routes/404'
+import * as app from './routes/app'
 
-const wrapRouter = (socket: Socket) =>
-  createBrowserRouter([
-    {
-      path: '/',
-      element: <root.Index />,
-      loader: (loaderArgs) => root.loader(socket, loaderArgs),
-      shouldRevalidate: () => false,
-      children: [
-        {
-          index: true,
-          element: <login.default />,
-          loader: (loaderArgs) => login.loader(socket, loaderArgs),
-          shouldRevalidate: () => false
-        }
-      ]
-    }
-  ])
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <root.default />,
+    loader: root.loader,
+    shouldRevalidate: () => false,
+    children: [
+      {
+        path: '/login',
+        element: <login.default />
+      },
+      {
+        path: '/app',
+        element: <app.default />
+      },
+      {
+        path: '*',
+        element: <$404.default />
+      }
+    ]
+  }
+])
 
 function App() {
-  console.log('running app component')
-  const socket = io()
-  return <RouterProvider router={wrapRouter(socket)} />
+  return <RouterProvider router={router} />
 }
 
 export default App

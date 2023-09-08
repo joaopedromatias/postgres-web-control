@@ -27,7 +27,7 @@ export const Button = ({ isDisabled, type }: Props) => {
         display: 'block',
         margin: 'auto',
         padding: '8px 12px',
-        backgroundColor: '#347de3',
+        backgroundColor: isDisabled ? 'lightgray' : '#347de3',
         fontSize: '1.1rem',
         fontWeight: 'bold',
         fontFamily: 'monospace'

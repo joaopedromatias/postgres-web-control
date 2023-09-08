@@ -19,7 +19,6 @@
     "fastify": "^4.22.0",
     "fastify-plugin": "^4.5.1",
     "pg": "^8.11.3",
-    "pg-hstore": "^2.3.4",
     "sequelize": "^6.32.1",
     "socket.io": "^4.7.2"
   },
