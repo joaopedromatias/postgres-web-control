@@ -1,5 +1,6 @@
 import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import { Sequelize } from 'sequelize'
+import { getTables } from '../utils/getTables'
 
 export async function db(fastify: FastifyInstance, _: FastifyPluginOptions) {
   const io = fastify.getIOServer()
@@ -50,6 +51,17 @@ export async function db(fastify: FastifyInstance, _: FastifyPluginOptions) {
         }
       } catch (err) {
         socket.emit('queryResultsError', (err as Error).message)
+      }
+    })
+
+    socket.on('getTables', async () => {
+      try {
+        if (isConnectedToDb && sequelize) {
+          const tables = await getTables(sequelize)
+          socket.emit('tableResults', { tables })
+        }
+      } catch (err) {
+        socket.emit('tableResultsError', (err as Error).message)
       }
     })
   })

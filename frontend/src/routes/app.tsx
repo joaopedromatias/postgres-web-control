@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '../components/Button'
 import { useOutletContext } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
@@ -17,33 +17,44 @@ const App = () => {
 
   const handleSend = () => {
     socket.emit('query', query)
-    socket.on('queryResults', ({ results, metadata }: QueryResults) => {
-      const command = metadata.command
-      if (results.length > 0) {
-        const tableToShow = [] as string[][]
-        const headers = Object.keys(results[0])
-        tableToShow.push(headers)
-        results.forEach((result) => {
-          const values = Object.values(result)
-          tableToShow.push(values)
-        })
-        setResult(tableToShow)
-        setIsResultATable(true)
-      } else {
-        if (command === 'SELECT') {
-          setResult([['no data to be showed']])
-        } else {
-          setResult([[`command ${command} runned successfully`]])
-        }
-        setIsResultATable(false)
-      }
-      setIsResultAnError(false)
-    })
-    socket.on('queryResultsError', (errorMessage: string) => {
-      setResult([[errorMessage]])
-      setIsResultAnError(true)
-    })
   }
+
+  const handleQueryResults = ({ results, metadata }: QueryResults) => {
+    const command = metadata.command
+    if (results.length > 0) {
+      const tableToShow = [] as string[][]
+      const headers = Object.keys(results[0])
+      tableToShow.push(headers)
+      results.forEach((result) => {
+        const values = Object.values(result)
+        tableToShow.push(values)
+      })
+      setResult(tableToShow)
+      setIsResultATable(true)
+    } else {
+      if (command === 'SELECT') {
+        setResult([['no data to be showed']])
+      } else {
+        setResult([[`command ${command} runned successfully`]])
+      }
+      setIsResultATable(false)
+    }
+    setIsResultAnError(false)
+  }
+
+  const handleQueryError = (errorMessage: string) => {
+    setResult([[errorMessage]])
+    setIsResultAnError(true)
+  }
+
+  useEffect(() => {
+    socket.on('queryResults', handleQueryResults)
+    socket.on('queryResultsError', handleQueryError)
+    return () => {
+      socket.removeAllListeners('queryResults')
+      socket.removeAllListeners('queryResultsError')
+    }
+  }, [])
 
   return (
     <>
