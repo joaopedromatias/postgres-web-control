@@ -8,13 +8,13 @@ PORT=<PORT> npm run start       # starts the server on specified port (default t
 
 ## Objective
 
-The objective of this app is to provide a web interface that allows users to manage relational databases by running SQL commands, creating tables through UI, uploading csv files to be inserted in tables and showing the total amount of current connections to the database.
+The objective of this app is to provide a web interface that allows users to manage postgres databases by running SQL commands, creating tables through UI and uploading csv files to be inserted in tables.
 
 ## Technologies
 
-- **Front End**: React, Context API, Tailwind, React Router
+- **Front End**: React, TailwindCSS, React Router
 
-- **Back End**: Fastify, Sequelize, AWS S3 (localstack), AWS Lambda (localstack), Socket
+- **Back End**: Fastify, Sequelize, Socket
 
 - **Virtualization**: Docker, Docker Compose
 
