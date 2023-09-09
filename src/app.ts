@@ -3,7 +3,7 @@ import fastifyHelmet from '@fastify/helmet'
 import fastifyPlugin from 'fastify-plugin'
 import { Server } from 'socket.io'
 
-import { db } from './plugins/db'
+import { router } from './router'
 import { staticfFiles } from './plugins/staticFiles'
 
 declare global {
@@ -31,7 +31,7 @@ const start = async () => {
     return io
   })
 
-  await fastify.register(fastifyPlugin(db))
+  await fastify.register(fastifyPlugin(router))
 
   await fastify.register(fastifyPlugin(staticfFiles))
 

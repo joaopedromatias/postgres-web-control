@@ -43,6 +43,7 @@
         "argsIgnorePattern": "_",
         "varsIgnorePattern": "_"
       }
-    ]
+    ],
+    "prefer-const": "off"
   }
 }
