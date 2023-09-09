@@ -1,11 +1,26 @@
+import { useEffect, useState } from 'react'
+
 interface Props {
-  result: string[][]
+  rows: Record<string, string>[]
 }
 
-export const Table = ({ result }: Props) => {
+export const Table = ({ rows }: Props) => {
+  const [tableData, setTableData] = useState([] as string[][])
+
+  useEffect(() => {
+    const newTableData = []
+    const headers = Object.keys(rows[0])
+    newTableData.push(headers)
+    rows.forEach((row) => {
+      const values = Object.values(row)
+      newTableData.push(values)
+    })
+    setTableData(newTableData)
+  }, [rows])
+
   return (
     <table className="border-2 border-spacing-2 border-cyan-300">
-      {result.map((row, index) => {
+      {tableData.map((row, index) => {
         if (index === 0) {
           return (
             <thead className="font-bold" key={index}>
@@ -24,7 +39,7 @@ export const Table = ({ result }: Props) => {
               <tr>
                 {row.map((value, index) => (
                   <td className="p-2" key={index}>
-                    {value}
+                    {value ? value.toString() : '-'}
                   </td>
                 ))}
               </tr>

@@ -6,16 +6,16 @@ import { Table } from './Table'
 
 type QueryResults = {
   rows: Record<string, string>[]
-  rowCount: number
+  rowCount: number | null
   command: string
 }
 
 export const QueryInterface = () => {
   const socket = useOutletContext() as Socket
   const [query, setQuery] = useState(window.sessionStorage.getItem('query')?.toString() || '')
-  const [result, setResult] = useState<string[][]>([])
+  const [tableData, setTableData] = useState<Record<string, string>[]>([])
   const [isResultAnError, setIsResultAnError] = useState(false)
-  const [isResultATable, setIsResultATable] = useState(false)
+  const [message, setMessage] = useState('')
 
   const handleSend = () => {
     window.sessionStorage.setItem('query', query)
@@ -23,33 +23,27 @@ export const QueryInterface = () => {
   }
 
   const handleQueryResults = ({ command, rowCount, rows }: QueryResults) => {
-    setIsResultAnError(false)
     const isResultATable = rows.length > 0
-    setIsResultATable(isResultATable)
-
     if (isResultATable) {
-      const tableToShow = [] as string[][]
-      const headers = Object.keys(rows[0])
-      tableToShow.push(headers)
-      rows.forEach((row) => {
-        const values = Object.values(row)
-        tableToShow.push(values)
-      })
-      setResult(tableToShow)
-    } else {
-      let message = ''
-      if (command === 'SELECT') {
-        message = 'no data to be showed'
-      } else {
-        message = `command ${command} runned successfully, ${rowCount} rows affected}`
-      }
-      setResult([[message]])
+      return setTableData(rows)
     }
+
+    let message = ''
+    if (command.toLowerCase() === 'select') {
+      message = 'no data to be showed'
+    } else {
+      message = `command ${command} runned successfully, ${rowCount ? rowCount : '0'} rows affected`
+      socket.emit('getTables', query)
+    }
+    setIsResultAnError(false)
+    setMessage(message)
+    setTableData([])
   }
 
   const handleQueryResultsError = (errorMessage: string) => {
     setIsResultAnError(true)
-    setResult([[errorMessage]])
+    setMessage(errorMessage)
+    setTableData([])
   }
 
   useEffect(() => {
@@ -63,27 +57,20 @@ export const QueryInterface = () => {
 
   return (
     <div className="basis-1/3 m-auto px-5">
-      {result.length > 0 && (
-        <div>
-          {isResultAnError ? (
-            <span className="text-red-500 block text-left" role="alert">
-              {result[0][0]}
-            </span>
-          ) : isResultATable ? (
-            <Table result={result} />
-          ) : (
-            <span className="block text-left">{result[0][0]}</span>
-          )}
-        </div>
+      {tableData.length > 0 ? (
+        <Table rows={tableData} />
+      ) : isResultAnError ? (
+        <span className="text-red-500 block text-left" role="alert">
+          {message}
+        </span>
+      ) : (
+        <span className="block text-left">{message}</span>
       )}
       <textarea
         value={query}
         onInput={(e) => {
           const value = (e.target as HTMLTextAreaElement).value
           setQuery(value)
-          if (!value) {
-            setResult([[]])
-          }
         }}
         cols={40}
         rows={60}

@@ -22,7 +22,6 @@ const wrapRouter = (socket: Socket) => {
         },
         {
           path: '/app',
-          loader: (loaderArgs) => app.loader(socket, loaderArgs),
           element: <app.default />
         }
       ]

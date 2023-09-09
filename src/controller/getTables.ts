@@ -10,6 +10,6 @@ export async function getTablesController(this: Socket) {
     }
     throw new Error('Not connected to database')
   } catch (err) {
-    this.emit('getTablesResultsError', err)
+    this.emit('getTablesResultsError', (err as Error).message)
   }
 }

@@ -1,22 +1,45 @@
-import { Suspense } from 'react'
-import { Await } from 'react-router-dom'
-import { Loading } from './Loading'
+import { useEffect, useState } from 'react'
+import { useOutletContext } from 'react-router-dom'
+import { Socket } from 'socket.io-client'
+import { Table } from './Table'
 
-interface Props {
-  promise: Promise<object[]>
-}
+export const TablesInterface = () => {
+  const socket = useOutletContext() as Socket
+  const [tablesInfo, setTablesInfo] = useState([] as Record<string, string>[])
+  const [isResultAnError, setIsResultAnError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
-export const TablesInterface = ({ promise }: Props) => {
+  const handleTableResults = (tables: Record<string, string>[]) => {
+    setIsResultAnError(false)
+    setTablesInfo(tables)
+  }
+
+  const handleTableResultsError = (message: string) => {
+    setIsResultAnError(true)
+    setErrorMessage(message)
+  }
+
+  useEffect(() => {
+    socket.emit('getTables')
+    socket.on('getTablesResults', handleTableResults)
+    socket.on('getTablesResultsError', handleTableResultsError)
+    return () => {
+      socket.removeAllListeners('getTablesResults')
+      socket.removeAllListeners('getTablesResultsError')
+    }
+  }, [])
+
   return (
     <div className="basis-1/3 m-auto px-5">
-      <Suspense fallback={<Loading />}>
-        <Await resolve={promise}>
-          {(tables) => {
-            console.log(tables)
-            return <div>tables promise resolved</div>
-          }}
-        </Await>
-      </Suspense>
+      {isResultAnError ? (
+        <span className="text-red-500 block text-left" role="alert">
+          {errorMessage}
+        </span>
+      ) : tablesInfo.length > 0 ? (
+        <Table rows={tablesInfo} />
+      ) : (
+        <div>no tables to display</div>
+      )}
     </div>
   )
 }
