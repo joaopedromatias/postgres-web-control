@@ -2,7 +2,7 @@ import Fastify from 'fastify'
 import fastifyHelmet from '@fastify/helmet'
 import fastifyPlugin from 'fastify-plugin'
 import { Server } from 'socket.io'
-import type { Sequelize } from 'sequelize'
+import type { Client } from 'pg'
 
 import { router } from './router'
 import { staticfFiles } from './plugins/staticFiles'
@@ -24,7 +24,7 @@ declare module 'fastify' {
 
 declare module 'socket.io' {
   interface Socket {
-    sequelize: Sequelize | null
+    pgClient: Client | null
     isConnectedToDb: boolean
   }
 }

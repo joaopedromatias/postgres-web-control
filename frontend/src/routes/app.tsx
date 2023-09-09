@@ -4,7 +4,7 @@ import { CommandsInterface } from '../components/CommandsInterface'
 
 const App = () => {
   return (
-    <div className="flex flex-row justify-between w-[100vw] px-5">
+    <div className="flex flex-row justify-between w-[100vw] px-5 pt-5">
       <TablesInterface />
       <QueryInterface />
       <CommandsInterface />

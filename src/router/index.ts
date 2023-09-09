@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
-import { Sequelize } from 'sequelize'
+import { Client } from 'pg'
 import { getTablesController } from '../controller/getTables'
 import { connectClientToDbController } from '../controller/connectClientToDb'
 import { queryController } from '../controller/query'
@@ -12,7 +12,7 @@ export async function router(fastify: FastifyInstance, _: FastifyPluginOptions) 
   io.on('connection', (socket) => {
     console.log(`The client ${socket.id} connected`)
 
-    socket.sequelize = null as Sequelize | null
+    socket.pgClient = null as Client | null
     socket.isConnectedToDb = false
 
     socket.on('disconnect', function (this: Socket, reason) {

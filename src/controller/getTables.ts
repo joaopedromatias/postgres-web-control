@@ -2,11 +2,11 @@ import type { Socket } from 'socket.io'
 
 export async function getTablesController(this: Socket) {
   try {
-    if (this.sequelize && this.isConnectedToDb) {
-      const tablesInformation = await this.sequelize.query(
+    if (this.pgClient && this.isConnectedToDb) {
+      const { rows } = await this.pgClient.query(
         `SELECT * FROM pg_catalog.pg_tables WHERE schemaname NOT IN ('pg_catalog', 'information_schema')`
       )
-      return this.emit('getTablesResults', tablesInformation)
+      return this.emit('getTablesResults', rows)
     }
     throw new Error('Not connected to database')
   } catch (err) {

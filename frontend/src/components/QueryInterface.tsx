@@ -5,8 +5,9 @@ import { Button } from './Button'
 import { Table } from './Table'
 
 type QueryResults = {
-  results: Record<string, string>[]
-  metadata: Record<string, string>
+  rows: Record<string, string>[]
+  rowCount: number
+  command: string
 }
 
 export const QueryInterface = () => {
@@ -21,27 +22,26 @@ export const QueryInterface = () => {
     socket.emit('query', query)
   }
 
-  const handleQueryResults = ({ results, metadata }: QueryResults) => {
+  const handleQueryResults = ({ command, rowCount, rows }: QueryResults) => {
     setIsResultAnError(false)
-    const isResultATable = results.length > 0
+    const isResultATable = rows.length > 0
     setIsResultATable(isResultATable)
 
     if (isResultATable) {
       const tableToShow = [] as string[][]
-      const headers = Object.keys(results[0])
+      const headers = Object.keys(rows[0])
       tableToShow.push(headers)
-      results.forEach((row) => {
-        const rows = Object.values(row)
-        tableToShow.push(rows)
+      rows.forEach((row) => {
+        const values = Object.values(row)
+        tableToShow.push(values)
       })
       setResult(tableToShow)
     } else {
       let message = ''
-      const command = metadata.command
       if (command === 'SELECT') {
         message = 'no data to be showed'
       } else {
-        message = `command ${command} runned successfully`
+        message = `command ${command} runned successfully, ${rowCount} rows affected}`
       }
       setResult([[message]])
     }

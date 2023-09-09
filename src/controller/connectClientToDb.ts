@@ -1,5 +1,4 @@
-import { Sequelize } from 'sequelize'
-import type { Dialect } from 'sequelize'
+import { Client } from 'pg'
 import type { Socket } from 'socket.io'
 
 export async function connectClientToDbController(
@@ -11,17 +10,17 @@ export async function connectClientToDbController(
       return this.emit('isConnectedToDb', true)
     }
 
-    const { database, username, password, dialect, port } = parameters
+    const { database, username, password, port } = parameters
 
-    this.sequelize = new Sequelize(database, username, password, {
-      host: '0.0.0.0',
-      dialect: dialect as Dialect,
+    this.pgClient = new Client({
+      database,
       port: Number(port),
-      logging: false,
-      pool: { max: 1 }
+      password,
+      user: username,
+      host: '0.0.0.0'
     })
 
-    await this.sequelize.authenticate()
+    await this.pgClient.connect()
     this.isConnectedToDb = true
 
     this.emit('isConnectedToDb', true)

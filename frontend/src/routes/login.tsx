@@ -55,21 +55,6 @@ const Login = () => {
       className="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-2/3 p-[20px] rounded-md border border-slate-300 flex flex-col gap-3 justify-center w-[25vw]"
     >
       <span className="text-lg text-slate-800">Login to your database</span>
-      <Input
-        name="dialect"
-        placeholder="database engine..."
-        type="text"
-        validValues={[
-          'postgres',
-          'sqlite',
-          'snowflake',
-          'oracle',
-          'mysql',
-          'mssql',
-          'db2',
-          'mariadb'
-        ]}
-      />
       <Input name="database" placeholder="database name..." type="text" />
       <Input name="username" placeholder="username..." type="text" />
       <Input name="password" placeholder="password..." type="password" />

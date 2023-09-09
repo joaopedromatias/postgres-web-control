@@ -11,7 +11,7 @@ export const loader = ({ request }: LoaderFunctionArgs) => {
   const formData = Object.fromEntries(url.searchParams)
 
   let dbParameters = {} as Record<string, string | null>
-  const requiredParameters = ['dialect', 'username', 'password', 'database', 'port']
+  const requiredParameters = ['username', 'password', 'database', 'port']
   const nbOfRequiredParameters = requiredParameters.length
 
   const formDataKeys = Object.keys(formData)
