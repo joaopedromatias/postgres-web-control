@@ -2,11 +2,9 @@ import { useEffect, useState } from 'react'
 import { Layout } from '../components/Layout'
 import { LoaderFunctionArgs, Outlet, defer, useLoaderData, useNavigate } from 'react-router-dom'
 import { Loading } from '../components/Loading'
-import { io } from 'socket.io-client'
-import { Socket } from 'socket.io'
+import { Socket } from 'socket.io-client'
 
-export const loader = ({ request }: LoaderFunctionArgs) => {
-  const socket = io()
+export const loader = (socket: Socket, { request }: LoaderFunctionArgs) => {
   const url = new URL(request.url)
   const formData = Object.fromEntries(url.searchParams)
 
