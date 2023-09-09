@@ -1,13 +1,13 @@
 import { QueryInterface } from '../components/QueryInterface'
 import { TablesInterface } from '../components/TablesInterface'
-import { Commands } from '../components/Commands'
+import { CommandsInterface } from '../components/CommandsInterface'
 
 const App = () => {
   return (
-    <div className="flex flex-row align-baseline justify-between w-[100vw] px-5">
+    <div className="flex flex-row justify-between w-[100vw] px-5">
       <TablesInterface />
       <QueryInterface />
-      <Commands />
+      <CommandsInterface />
     </div>
   )
 }

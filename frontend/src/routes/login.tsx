@@ -52,7 +52,7 @@ const Login = () => {
       method="get"
       action="/"
       onSubmit={handleFormSubmit}
-      className="p-[20px] rounded-md border border-slate-300 flex flex-col gap-3 justify-center w-[25vw]"
+      className="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-2/3 p-[20px] rounded-md border border-slate-300 flex flex-col gap-3 justify-center w-[25vw]"
     >
       <span className="text-lg text-slate-800">Login to your database</span>
       <Input

@@ -11,12 +11,13 @@ type QueryResults = {
 
 export const QueryInterface = () => {
   const socket = useOutletContext() as Socket
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState(window.sessionStorage.getItem('query')?.toString() || '')
   const [result, setResult] = useState<string[][]>([])
   const [isResultAnError, setIsResultAnError] = useState(false)
   const [isResultATable, setIsResultATable] = useState(false)
 
   const handleSend = () => {
+    window.sessionStorage.setItem('query', query)
     socket.emit('query', query)
   }
 
@@ -61,7 +62,7 @@ export const QueryInterface = () => {
   }, [])
 
   return (
-    <div className="basis-1/3">
+    <div className="basis-1/3 m-auto px-5">
       {result.length > 0 && (
         <div>
           {isResultAnError ? (
