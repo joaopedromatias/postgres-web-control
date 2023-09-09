@@ -1,15 +1,11 @@
-import { Sequelize } from 'sequelize'
 import type { DisconnectReason, Socket } from 'socket.io'
 
-export async function disconnectController(
-  this: Socket,
-  sequelize: Sequelize | null,
-  reason: DisconnectReason
-) {
+export async function disconnectController(this: Socket, reason: DisconnectReason) {
   try {
     console.log(`The client ${this.id} disconnected due to ${reason}`)
-    if (sequelize) {
-      await sequelize.close()
+    if (this.sequelize) {
+      console.log(`Disconnected ${this.id} of the database`)
+      await this.sequelize.close()
     }
   } catch (err) {
     console.error(err)

@@ -14,7 +14,13 @@ export const loader = ({ request }: LoaderFunctionArgs) => {
   const requiredParameters = ['dialect', 'username', 'password', 'database', 'port']
   const nbOfRequiredParameters = requiredParameters.length
 
-  if (Object.keys(formData).every((key) => requiredParameters.includes(key) && formData[key])) {
+  const formDataKeys = Object.keys(formData)
+  const formDataHasTheRightLength = formDataKeys.length === nbOfRequiredParameters
+  const formDataHasTheRightKeys = formDataKeys.every(
+    (key) => requiredParameters.includes(key) && formData[key]
+  )
+
+  if (formDataHasTheRightLength && formDataHasTheRightKeys) {
     dbParameters = { ...formData }
   } else {
     requiredParameters.forEach((parameter) => {

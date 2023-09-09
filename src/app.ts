@@ -2,6 +2,7 @@ import Fastify from 'fastify'
 import fastifyHelmet from '@fastify/helmet'
 import fastifyPlugin from 'fastify-plugin'
 import { Server } from 'socket.io'
+import type { Sequelize } from 'sequelize'
 
 import { router } from './router'
 import { staticfFiles } from './plugins/staticFiles'
@@ -18,6 +19,13 @@ declare global {
 declare module 'fastify' {
   interface FastifyInstance {
     getIOServer: () => Server
+  }
+}
+
+declare module 'socket.io' {
+  interface Socket {
+    sequelize: Sequelize | null
+    isConnectedToDb: boolean
   }
 }
 

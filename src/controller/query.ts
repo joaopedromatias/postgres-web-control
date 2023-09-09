@@ -1,19 +1,13 @@
-import type { Sequelize } from 'sequelize'
 import type { Socket } from 'socket.io'
 
-export const queryController = async (
-  socket: Socket,
-  sequelize: Sequelize | null,
-  query: string,
-  isConnectedToDb: boolean
-) => {
+export async function queryController(this: Socket, query: string) {
   try {
-    if (isConnectedToDb && sequelize) {
-      const [results, metadata] = await sequelize.query(query)
-      return socket.emit('queryResults', { results, metadata })
+    if (this.isConnectedToDb && this.sequelize) {
+      const [results, metadata] = await this.sequelize.query(query)
+      return this.emit('queryResults', { results, metadata })
     }
     throw new Error('Not connected to database')
   } catch (err) {
-    socket.emit('queryResultsError', (err as Error).message)
+    this.emit('queryResultsError', (err as Error).message)
   }
 }

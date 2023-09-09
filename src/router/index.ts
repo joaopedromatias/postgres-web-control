@@ -12,19 +12,23 @@ export async function router(fastify: FastifyInstance, _: FastifyPluginOptions) 
   io.on('connection', (socket) => {
     console.log(`The client ${socket.id} connected`)
 
-    let sequelize = null as Sequelize | null
-    let isConnectedToDb = false
+    socket.sequelize = null as Sequelize | null
+    socket.isConnectedToDb = false
 
     socket.on('disconnect', function (this: Socket, reason) {
-      disconnectController.apply(this, [sequelize, reason])
+      disconnectController.apply(this, [reason])
     })
 
-    socket.on('connectClientToDb', (parameters) =>
-      connectClientToDbController(socket, sequelize, parameters, isConnectedToDb)
-    )
+    socket.on('connectClientToDb', function (this: Socket, parameters) {
+      connectClientToDbController.apply(this, [parameters])
+    })
 
-    socket.on('query', (query) => queryController(socket, sequelize, query, isConnectedToDb))
+    socket.on('query', function (this: Socket, query) {
+      queryController.apply(this, [query])
+    })
 
-    socket.on('getTables', () => getTablesController(socket, sequelize, isConnectedToDb))
+    socket.on('getTables', function (this: Socket) {
+      getTablesController.apply(this)
+    })
   })
 }

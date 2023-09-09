@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '../components/Button'
 import { useOutletContext } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
+import { Table } from '../components/Table'
 
 type QueryResults = {
   results: Record<string, string>[]
@@ -9,47 +10,54 @@ type QueryResults = {
 }
 
 const App = () => {
+  return <QueryInterface />
+}
+
+const QueryInterface = () => {
   const socket = useOutletContext() as Socket
-  const [isResultAnError, setIsResultAnError] = useState(false)
-  const [isResultATable, setIsResultATable] = useState(false)
   const [query, setQuery] = useState('')
   const [result, setResult] = useState<string[][]>([])
+  const [isResultAnError, setIsResultAnError] = useState(false)
+  const [isResultATable, setIsResultATable] = useState(false)
 
   const handleSend = () => {
     socket.emit('query', query)
   }
 
   const handleQueryResults = ({ results, metadata }: QueryResults) => {
-    const command = metadata.command
-    if (results.length > 0) {
+    setIsResultAnError(false)
+    const isResultATable = results.length > 0
+    setIsResultATable(isResultATable)
+
+    if (isResultATable) {
       const tableToShow = [] as string[][]
       const headers = Object.keys(results[0])
       tableToShow.push(headers)
-      results.forEach((result) => {
-        const values = Object.values(result)
-        tableToShow.push(values)
+      results.forEach((row) => {
+        const rows = Object.values(row)
+        tableToShow.push(rows)
       })
       setResult(tableToShow)
-      setIsResultATable(true)
     } else {
+      let message = ''
+      const command = metadata.command
       if (command === 'SELECT') {
-        setResult([['no data to be showed']])
+        message = 'no data to be showed'
       } else {
-        setResult([[`command ${command} runned successfully`]])
+        message = `command ${command} runned successfully`
       }
-      setIsResultATable(false)
+      setResult([[message]])
     }
-    setIsResultAnError(false)
   }
 
-  const handleQueryError = (errorMessage: string) => {
-    setResult([[errorMessage]])
+  const handleQueryResultsError = (errorMessage: string) => {
     setIsResultAnError(true)
+    setResult([[errorMessage]])
   }
 
   useEffect(() => {
     socket.on('queryResults', handleQueryResults)
-    socket.on('queryResultsError', handleQueryError)
+    socket.on('queryResultsError', handleQueryResultsError)
     return () => {
       socket.removeAllListeners('queryResults')
       socket.removeAllListeners('queryResultsError')
@@ -65,31 +73,7 @@ const App = () => {
               {result[0][0]}
             </span>
           ) : isResultATable ? (
-            <table className="border-2 border-spacing-2 border-cyan-300">
-              {result.map((row, index) => {
-                if (index === 0) {
-                  return (
-                    <thead className="font-bold" key={index}>
-                      {row.map((header, index) => (
-                        <td className="p-2" key={index}>
-                          {header}
-                        </td>
-                      ))}
-                    </thead>
-                  )
-                } else {
-                  return (
-                    <tbody key={index}>
-                      {row.map((value, index) => (
-                        <td className="p-2" key={index}>
-                          {value}
-                        </td>
-                      ))}
-                    </tbody>
-                  )
-                }
-              })}
-            </table>
+            <Table result={result} />
           ) : (
             <span className="block text-left">{result[0][0]}</span>
           )}

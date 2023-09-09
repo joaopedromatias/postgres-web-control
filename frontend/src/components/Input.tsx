@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 interface Props {
   name: string
@@ -9,22 +9,25 @@ interface Props {
 
 export const Input = ({ name, placeholder, type, validValues }: Props) => {
   const [errorMessage, setErrorMessage] = useState('')
+
+  const handleInput = (e: FormEvent) => {
+    const value = (e.target as HTMLInputElement).value
+    if (validValues && !validValues?.includes(value)) {
+      setErrorMessage(`The values must be one of the following: ${validValues.join(', ')}`)
+    } else {
+      setErrorMessage('')
+    }
+    setTimeout(() => {
+      document.forms[0].dispatchEvent(new Event('input'))
+    }, 0)
+  }
+
   return (
     <>
       <input
         aria-invalid={!!errorMessage}
         aria-errormessage={errorMessage}
-        onInput={(e) => {
-          const value = (e.target as HTMLInputElement).value
-          if (validValues && !validValues?.includes(value)) {
-            setErrorMessage(`The values must be one of the following: ${validValues.join(', ')}`)
-          } else {
-            setErrorMessage('')
-          }
-          setTimeout(() => {
-            document.forms[0].dispatchEvent(new Event('input'))
-          }, 0)
-        }}
+        onInput={handleInput}
         required
         className="border-2 rounded pl-1 text-sm"
         type={type}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { Button } from '../components/Button'
 import { Input } from '../components/Input'
 
@@ -13,7 +13,7 @@ const Login = () => {
     let countHasValueAndIsValid = 0
     inputFormElements.forEach((element) => {
       const elementValue = (element as HTMLInputElement).value
-      const isValid = element.getAttribute('aria-invalid') === 'false' ? true : false
+      const isValid = element.getAttribute('aria-invalid') === 'false'
       if (elementValue && isValid) countHasValueAndIsValid++
     })
 
@@ -21,6 +21,18 @@ const Login = () => {
       return setIsDisabled(false)
     }
     setIsDisabled(true)
+  }
+
+  const handleFormSubmit = (e: FormEvent) => {
+    const formElements = (e.target as HTMLFormElement).elements
+    const inputFormElements = [...formElements].filter((element) => element.tagName === 'INPUT')
+    inputFormElements.forEach((element) => {
+      const elementValue = (element as HTMLInputElement).value
+      const elementName = element.getAttribute('name')
+      if (elementName && elementValue) {
+        window.sessionStorage.setItem(elementName, elementValue)
+      }
+    })
   }
 
   useEffect(() => {
@@ -39,17 +51,7 @@ const Login = () => {
     <form
       method="get"
       action="/"
-      onSubmit={(e) => {
-        const formElements = (e.target as HTMLFormElement).elements
-        const inputFormElements = [...formElements].filter((element) => element.tagName === 'INPUT')
-        inputFormElements.forEach((element) => {
-          const elementValue = (element as HTMLInputElement).value
-          const elementName = element.getAttribute('name')
-          if (elementName && elementValue) {
-            window.sessionStorage.setItem(elementName, elementValue)
-          }
-        })
-      }}
+      onSubmit={handleFormSubmit}
       className="p-[20px] rounded-md border border-slate-300 flex flex-col gap-3 justify-center w-[25vw]"
     >
       <span className="text-lg text-slate-800">Login to your database</span>
