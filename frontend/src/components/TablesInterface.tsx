@@ -1,15 +1,25 @@
 import { useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
-import { Table } from './Table'
+
+interface TablesInfo {
+  schemaname: string
+  tablename: string
+  tableowner: string
+  tablespace: string
+  hasindexes: boolean
+  hasrules: boolean
+  hastriggers: boolean
+  rowsecurity: string
+}
 
 export const TablesInterface = () => {
   const socket = useOutletContext() as Socket
-  const [tablesInfo, setTablesInfo] = useState([] as Record<string, string>[])
+  const [tablesInfo, setTablesInfo] = useState([] as TablesInfo[])
   const [isResultAnError, setIsResultAnError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
-  const handleTableResults = (tables: Record<string, string>[]) => {
+  const handleTableResults = (tables: TablesInfo[]) => {
     setIsResultAnError(false)
     setTablesInfo(tables)
   }
@@ -36,7 +46,13 @@ export const TablesInterface = () => {
           {errorMessage}
         </span>
       ) : tablesInfo.length > 0 ? (
-        <Table rows={tablesInfo} />
+        <div className="border-2 border-cyan-300">
+          {tablesInfo.map((tableInfo, index) => (
+            <div key={index}>
+              {index + 1}. {tableInfo.tablename}
+            </div>
+          ))}
+        </div>
       ) : (
         <div>no tables to display</div>
       )}
