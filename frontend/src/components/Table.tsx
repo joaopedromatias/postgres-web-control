@@ -19,7 +19,7 @@ export const Table = ({ rows }: Props) => {
   }, [rows])
 
   return (
-    <table className="border-2 border-spacing-2 border-cyan-300 m-auto mb-5">
+    <table className="border-2 border-spacing-2 border-cyan-300 m-auto mb-5 h-0">
       {tableData.map((row, index) => {
         if (index === 0) {
           return (
