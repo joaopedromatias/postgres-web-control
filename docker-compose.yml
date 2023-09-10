@@ -6,4 +6,10 @@ services:
       POSTGRES_PASSWORD: pass
     ports:
       - 5432:5432
-# docker-compose -f docker-compose.yml up -d
+  localstack:
+    image: localstack/localstack
+    ports:
+      - 4566:4566
+    environment:
+      - AWS_DEFAULT_REGION=us-east-1
+# docker-compose up -d --remove-orphans
