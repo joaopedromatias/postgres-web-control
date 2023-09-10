@@ -4,10 +4,12 @@ import { CommandsInterface } from '../components/CommandsInterface'
 
 const App = () => {
   return (
-    <div className="flex flex-row justify-between w-[100vw] px-5 pt-5">
+    <div className="flex flex-row justify-start w-[100vw] h-[100vh]">
       <TablesInterface />
-      <QueryInterface />
-      <CommandsInterface />
+      <div className="flex flex-col basis-4/5 bg-teal-200">
+        <QueryInterface />
+        <CommandsInterface />
+      </div>
     </div>
   )
 }

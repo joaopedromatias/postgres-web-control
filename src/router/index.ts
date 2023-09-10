@@ -5,6 +5,7 @@ import { connectClientToDbController } from '../controller/connectClientToDb'
 import { queryController } from '../controller/query'
 import { disconnectController } from '../controller/disconnect'
 import { Socket } from 'socket.io'
+import { deleteTableController } from '../controller/deleteTableController'
 
 export async function router(fastify: FastifyInstance, _: FastifyPluginOptions) {
   const io = fastify.getIOServer()
@@ -29,6 +30,10 @@ export async function router(fastify: FastifyInstance, _: FastifyPluginOptions) 
 
     socket.on('getTables', function (this: Socket) {
       getTablesController.apply(this)
+    })
+
+    socket.on('deleteTable', function (this: Socket, tableName: string) {
+      deleteTableController.apply(this, [tableName])
     })
   })
 }

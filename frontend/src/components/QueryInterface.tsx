@@ -56,16 +56,19 @@ export const QueryInterface = () => {
   }, [])
 
   return (
-    <div className="basis-1/3 m-auto px-5">
-      {tableData.length > 0 ? (
-        <Table rows={tableData} />
-      ) : isResultAnError ? (
-        <span className="text-red-500 block text-left" role="alert">
-          {message}
-        </span>
-      ) : (
-        <span className="block text-left">{message}</span>
-      )}
+    <div className="basis-1/3 m-auto px-5 w-full">
+      <div>
+        <div className="h-[15vh]">Output:</div>
+        {tableData.length > 0 ? (
+          <Table rows={tableData} />
+        ) : isResultAnError ? (
+          <span className="text-red-500 block text-left" role="alert">
+            {message}
+          </span>
+        ) : (
+          <span className="block text-left">{message}</span>
+        )}
+      </div>
       <textarea
         value={query}
         onInput={(e) => {
@@ -74,7 +77,7 @@ export const QueryInterface = () => {
         }}
         cols={40}
         rows={60}
-        className="border-2 rounded pl-1 h-[100px]"
+        className="border-2 rounded-lg h-[35vh] w-full resize-none"
       />
       <Button isDisabled={!query} type="button" text={'send'} onClick={handleSend} />
     </div>
