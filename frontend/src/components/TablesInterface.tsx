@@ -51,7 +51,7 @@ export const TablesInterface = () => {
               <div key={index} className="pl-2 my-5 flex justify-between items-center">
                 <div className="basis-1/12">{index + 1}</div>
                 <div className="basis-9/12 pl-4">
-                  <div className="flex flex-col justify-start items-start gap-2 max-w-[15vw] overflow-x-auto whitespace-nowrap">
+                  <div className="flex flex-col justify-start items-start gap-2 w-[15vw] max-w-[15vw] overflow-x-auto whitespace-nowrap">
                     <div>name: {tableName}</div>
                     <div className="flex flex-col justify-start text-xs gap-1">
                       <div>indexes: {String(tableInfo.hasindexes)}</div>

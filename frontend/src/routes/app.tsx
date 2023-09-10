@@ -6,7 +6,7 @@ const App = () => {
   return (
     <div className="flex flex-row justify-start w-[100vw] h-[100vh]">
       <TablesInterface />
-      <div className="flex flex-col basis-4/5">
+      <div className="flex flex-col max-w-[80vw] basis-4/5">
         <QueryInterface />
         <CommandsInterface />
       </div>

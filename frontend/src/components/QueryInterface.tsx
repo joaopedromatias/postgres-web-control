@@ -56,12 +56,14 @@ export const QueryInterface = () => {
   }, [])
 
   return (
-    <div className="basis-4/5 m-auto w-full max-h-[80vh] relative">
-      <div className="absolute top-2 right-2">
-        <Button isDisabled={!query} type="button" text={'run'} onClick={handleSend} />
-      </div>
-      <div className="h-[40vh] px-3">
+    <div className="basis-4/5 max-h-[80vh] overflow-hidden">
+      <div className="flex justify-between items-center h-[10vh] p-4">
         <div className="text-left">Output:</div>
+        <div className="mr-0">
+          <Button isDisabled={!query} type="button" text={'run'} onClick={handleSend} />
+        </div>
+      </div>
+      <div className="h-[40vh] px-4 overflow-x-auto">
         {tableData.length > 0 ? (
           <Table rows={tableData} />
         ) : isResultAnError ? (
@@ -73,6 +75,8 @@ export const QueryInterface = () => {
         )}
       </div>
       <textarea
+        className="border-2 rounded-lg h-[30vh] w-full resize-none focus:outline-none"
+        placeholder="query here!"
         value={query}
         onInput={(e) => {
           const value = (e.target as HTMLTextAreaElement).value
@@ -80,7 +84,6 @@ export const QueryInterface = () => {
         }}
         cols={40}
         rows={60}
-        className="border-2 rounded-lg h-[40vh] w-full resize-none focus:outline-none"
       />
     </div>
   )
