@@ -19,19 +19,21 @@ export const Table = ({ rows }: Props) => {
   }, [rows])
 
   return (
-    <table className="border-2 border-spacing-2 border-cyan-300 m-auto mb-5 h-0">
+    <table className="border-2 border-spacing-2 border-cyan-300 mb-3">
       {tableData.map((row, index) => {
         if (index === 0) {
           return (
-            <thead className="font-bold" key={index}>
-              <tr>
-                {row.map((header, index) => (
-                  <th className="p-2" key={index}>
-                    {header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
+            <>
+              <thead className="font-bold border-b-2" key={index}>
+                <tr>
+                  {row.map((header, index) => (
+                    <th className="p-2" key={index}>
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+            </>
           )
         } else {
           return (

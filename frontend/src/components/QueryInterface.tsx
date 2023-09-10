@@ -56,12 +56,12 @@ export const QueryInterface = () => {
   }, [])
 
   return (
-    <div className="basis-4/5 m-auto px-5 w-full relative max-h-[80vh]">
+    <div className="basis-4/5 m-auto w-full max-h-[80vh] relative">
       <div className="absolute top-2 right-2">
         <Button isDisabled={!query} type="button" text={'run'} onClick={handleSend} />
       </div>
-      <div className="h-[40vh]">
-        <div>Output:</div>
+      <div className="h-[40vh] px-3">
+        <div className="text-left">Output:</div>
         {tableData.length > 0 ? (
           <Table rows={tableData} />
         ) : isResultAnError ? (
@@ -80,7 +80,7 @@ export const QueryInterface = () => {
         }}
         cols={40}
         rows={60}
-        className="border-2 rounded-lg h-[40vh] w-full resize-none"
+        className="border-2 rounded-lg h-[40vh] w-full resize-none focus:outline-none"
       />
     </div>
   )
