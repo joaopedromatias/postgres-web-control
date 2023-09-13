@@ -1,5 +1,6 @@
-import { Client } from 'pg'
-import { Server } from 'socket.io'
+import type { S3Client } from '@aws-sdk/client-s3'
+import type { Client } from 'pg'
+import type { Server } from 'socket.io'
 
 declare global {
   namespace NodeJS {
@@ -13,6 +14,7 @@ declare global {
 declare module 'fastify' {
   interface FastifyInstance {
     getIOServer: () => Server
+    getS3Client: () => S3Client
   }
 }
 
