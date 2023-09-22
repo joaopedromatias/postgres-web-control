@@ -12,10 +12,12 @@ The objective of this app is to provide a web interface that allows users to man
 
 ## Technologies
 
+- **Programming Language**: TypeScript
+
 - **Front End**: React, TailwindCSS, React Router
 
-- **Back End**: Fastify, Sequelize, Socket
+- **Back End**: Fastify, AWS SDK, Socket, Local Stack
 
-- **Virtualization**: Docker, Docker Compose
+- **Virtualization**: Docker Compose
 
-- **Development Environment**: TypeScript, ESLint, Prettier
+- **Development Environment**: ESLint, Prettier
