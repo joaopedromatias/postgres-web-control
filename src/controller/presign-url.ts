@@ -8,11 +8,11 @@ export async function presignUrlController(
   rep: FastifyReply
 ) {
   try {
-    const fileName = (req.query as { fileName: string }).fileName
-    const client = this.getS3Client()
-    const command = new PutObjectCommand({ Bucket: 'csv-files', Key: fileName })
-    const url = await getSignedUrl(client, command, { expiresIn: 3600 })
-    rep.send({ url })
+    const { tableName } = req.query as { tableName: string }
+    const s3Client = this.getS3Client()
+    const command = new PutObjectCommand({ Bucket: 'csv-files', Key: tableName })
+    const presignedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 })
+    rep.send({ presignedUrl })
   } catch (err) {
     console.error(err)
   }

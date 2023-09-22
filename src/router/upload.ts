@@ -10,9 +10,9 @@ export async function uploadRouter(fastify: FastifyInstance) {
           querystring: {
             type: 'object',
             properties: {
-              fileName: { type: 'string' }
+              tableName: { type: 'string' }
             },
-            required: ['fileName']
+            required: ['tableName']
           }
         }
       },

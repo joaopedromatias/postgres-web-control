@@ -11,5 +11,6 @@ services:
     ports:
       - 4566:4566
     environment:
+      - SERVICES=lambda,s3
       - AWS_DEFAULT_REGION=us-east-1
 # docker-compose up -d --remove-orphans

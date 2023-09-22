@@ -1,12 +1,11 @@
 import type { Socket } from 'socket.io'
+import { getTables } from '../../utils/getTables'
 
 export async function getTablesController(this: Socket) {
   try {
     if (this.pgClient && this.isConnectedToDb) {
-      const { rows } = await this.pgClient.query(
-        `SELECT * FROM pg_catalog.pg_tables WHERE schemaname NOT IN ('pg_catalog', 'information_schema')`
-      )
-      return this.emit('getTablesResults', rows)
+      const tables = await getTables(this.pgClient)
+      return this.emit('tables', tables)
     }
     throw new Error('Not connected to database')
   } catch (err) {

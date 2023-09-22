@@ -6,7 +6,7 @@ import { Server } from 'socket.io'
 import { socketRouter } from './router/socket'
 import { uploadRouter } from './router/upload'
 import { staticfFiles } from './plugins/staticFiles'
-import { s3Client } from './plugins/s3Client'
+import { s3Client } from './plugins/s3'
 
 const fastify = Fastify({ ignoreTrailingSlash: true })
 const io = new Server(fastify.server)

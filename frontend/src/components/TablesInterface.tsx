@@ -20,31 +20,41 @@ export const TablesInterface = () => {
   const socket = useOutletContext() as Socket
   const [tablesInfo, setTablesInfo] = useState([] as TablesInfo[])
   const [isInsertDataModalOpen, setIsInsertDataModalOpen] = useState(false)
+  const [selectedTable, setSelectedTable] = useState('')
 
   const handleTableResults = (tables: TablesInfo[]) => {
     setTablesInfo(tables)
-  }
-
-  const handleDeletedTable = () => {
-    socket.emit('getTables')
   }
 
   const handleDeleteTable = (tableName: string) => {
     socket.emit('deleteTable', tableName)
   }
 
-  const handleUploadData = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUploadData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setIsInsertDataModalOpen(false)
+    try {
+      const formData = new FormData(e.target as HTMLFormElement)
+      const file = formData.get('file') as File
+      const response = await fetch(
+        `http://localhost:3000/upload/presign-url?tableName=${selectedTable}`
+      )
+      const { presignedUrl } = await response.json()
+      await fetch(presignedUrl, {
+        method: 'PUT',
+        body: file
+      })
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsInsertDataModalOpen(false)
+    }
   }
 
   useEffect(() => {
     socket.emit('getTables')
-    socket.on('getTablesResults', handleTableResults)
-    socket.on('deletedTable', handleDeletedTable)
+    socket.on('tables', handleTableResults)
     return () => {
-      socket.removeAllListeners('getTablesResults')
-      socket.removeAllListeners('deletedTable')
+      socket.removeAllListeners('tables')
     }
   }, [])
 
@@ -56,14 +66,15 @@ export const TablesInterface = () => {
           icon={<Upload size={80} isFixedColor={true} highlightColor="black" />}
           onSubmit={handleUploadData}
           ctaText="Upload"
-          onClose={() => setIsInsertDataModalOpen(false)}
+          setIsModalOpen={setIsInsertDataModalOpen}
         >
-          <div className="flex flex-col items-start gap-1">
-            <div>Choose a csv file</div>
-            <input type="file" accept="csv" placeholder="file..." />
+          <div className="flex flex-col items-start py-4 gap-4">
+            <div>
+              <input type="file" accept="csv" name="file" placeholder="file..." />
+            </div>
             <div className="flex justify-start gap-4">
               <div className="flex gap-1">
-                <input type="radio" name="insert-mode" id="append" value="append" />
+                <input type="radio" name="insert-mode" id="append" value="append" defaultChecked />
                 <label htmlFor="append">append data</label>
               </div>
               <div className="flex gap-1">
@@ -82,8 +93,8 @@ export const TablesInterface = () => {
             return (
               <div key={index} className="pl-2 my-5 flex justify-between items-center">
                 <div className="basis-1/12">{index + 1}</div>
-                <div className="basis-9/12 px-4">
-                  <div className="flex flex-col justify-start items-start gap-2 w-[15vw] max-w-[15vw] overflow-x-auto whitespace-nowrap">
+                <div className="basis-9/12 px-4 w-[15vw]">
+                  <div className="flex flex-col justify-start items-start gap-2 overflow-x-auto whitespace-nowrap">
                     <div>name: {tableName}</div>
                     <div className="flex flex-col justify-start text-xs gap-1">
                       <div>indexes: {String(tableInfo.hasindexes)}</div>
@@ -91,13 +102,16 @@ export const TablesInterface = () => {
                     </div>
                   </div>
                 </div>
-                <div className="basis-2/12 flex flex-col gap-3">
+                <div className="basis-2/12 flex flex-col gap-3 items-center">
                   <div role="button" aria-label={`Upload data to table ${tableName}`}>
                     <Upload
                       size={20}
                       highlightColor="lightgreen"
                       isFixedColor={false}
-                      onClick={() => setIsInsertDataModalOpen(true)}
+                      onClick={() => {
+                        setIsInsertDataModalOpen(true)
+                        setSelectedTable(tableName)
+                      }}
                     />
                   </div>
                   <div role="button" aria-label={`Delete table ${tableName}`}>
