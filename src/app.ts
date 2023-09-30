@@ -8,6 +8,7 @@ import { uploadRouter } from './router/upload'
 import { staticfFiles } from './plugins/staticFiles'
 import { s3Client } from './plugins/s3'
 import { dynamoClient } from './plugins/dynamo'
+import { commandsRouter } from './router/commands'
 
 const fastify = Fastify({ ignoreTrailingSlash: true })
 const io = new Server(fastify.server)
@@ -26,6 +27,7 @@ const start = async () => {
 
     await fastify.register(socketRouter)
     await fastify.register(uploadRouter, { prefix: '/upload' })
+    await fastify.register(commandsRouter)
 
     fastify.setErrorHandler(function (error, _, reply) {
       console.error(error)

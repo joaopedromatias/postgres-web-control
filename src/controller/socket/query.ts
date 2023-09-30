@@ -1,16 +1,15 @@
 import type { Socket } from 'socket.io'
 import { getTables } from '../../utils/getTables'
+import type { DynamoDBClient } from '@aws-sdk/client-dynamodb'
+import { saveCommand } from '../../utils/saveCommand'
 
-export async function queryController(this: Socket, query: string) {
+export async function queryController(this: Socket, query: string, dynamoClient: DynamoDBClient) {
   try {
     if (this.isConnectedToDb && this.pgClient) {
       const { rowCount, rows, command } = await this.pgClient.query(query)
 
-      /*
       const clientId = this.id
-      const now = new Date().toISOString()
-      const dynamoPayload = { clientId, query, rowCount, rows, command, timestamp: now }
-      */
+      await saveCommand(dynamoClient, clientId, query, rowCount, command)
 
       this.emit('queryResults', { rowCount, rows, command })
 

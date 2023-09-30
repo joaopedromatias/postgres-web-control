@@ -11,6 +11,7 @@ export async function socketRouter(fastify: FastifyInstance, _: FastifyPluginOpt
 
     io.on('connection', (socket) => {
       console.log(`The client ${socket.id} connected`)
+      const dynamoClient = fastify.getDynamoClient()
 
       socket.pgClient = null as Client | null
       socket.isConnectedToDb = false
@@ -24,7 +25,7 @@ export async function socketRouter(fastify: FastifyInstance, _: FastifyPluginOpt
       })
 
       socket.on('query', function (this: Socket, query) {
-        queryController.apply(this, [query])
+        queryController.apply(this, [query, dynamoClient])
       })
     })
   } catch (err) {
