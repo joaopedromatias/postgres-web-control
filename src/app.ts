@@ -7,6 +7,7 @@ import { socketRouter } from './router/socket'
 import { uploadRouter } from './router/upload'
 import { staticfFiles } from './plugins/staticFiles'
 import { s3Client } from './plugins/s3'
+import { dynamoClient } from './plugins/dynamo'
 
 const fastify = Fastify({ ignoreTrailingSlash: true })
 const io = new Server(fastify.server)
@@ -20,6 +21,7 @@ const start = async () => {
     })
 
     await fastify.register(fastifyPlugin(s3Client))
+    await fastify.register(fastifyPlugin(dynamoClient))
     await fastify.register(staticfFiles)
 
     await fastify.register(socketRouter)

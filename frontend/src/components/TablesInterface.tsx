@@ -27,7 +27,8 @@ export const TablesInterface = () => {
   }
 
   const handleDeleteTable = (tableName: string) => {
-    socket.emit('deleteTable', tableName)
+    const deleteTableQuery = `DROP TABLE IF EXISTS ${tableName}`
+    socket.emit('query', deleteTableQuery)
   }
 
   const handleUploadData = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -51,7 +52,6 @@ export const TablesInterface = () => {
   }
 
   useEffect(() => {
-    socket.emit('getTables')
     socket.on('tables', handleTableResults)
     return () => {
       socket.removeAllListeners('tables')

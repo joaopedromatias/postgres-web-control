@@ -1,11 +1,9 @@
 import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import { Client } from 'pg'
-import { getTablesController } from '../controller/socket/getTables'
 import { connectClientToDbController } from '../controller/socket/connectClientToDb'
 import { queryController } from '../controller/socket/query'
 import { disconnectController } from '../controller/socket/disconnect'
 import type { Socket } from 'socket.io'
-import { deleteTableController } from '../controller/socket/deleteTableController'
 
 export async function socketRouter(fastify: FastifyInstance, _: FastifyPluginOptions) {
   try {
@@ -27,14 +25,6 @@ export async function socketRouter(fastify: FastifyInstance, _: FastifyPluginOpt
 
       socket.on('query', function (this: Socket, query) {
         queryController.apply(this, [query])
-      })
-
-      socket.on('getTables', function (this: Socket) {
-        getTablesController.apply(this)
-      })
-
-      socket.on('deleteTable', function (this: Socket, tableName: string) {
-        deleteTableController.apply(this, [tableName])
       })
     })
   } catch (err) {

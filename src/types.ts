@@ -1,3 +1,4 @@
+import type { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import type { S3Client } from '@aws-sdk/client-s3'
 import type { Client } from 'pg'
 import type { Server } from 'socket.io'
@@ -15,6 +16,7 @@ declare module 'fastify' {
   interface FastifyInstance {
     getIOServer: () => Server
     getS3Client: () => S3Client
+    getDynamoClient: () => DynamoDBClient
   }
 }
 
