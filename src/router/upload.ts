@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify'
-import { presignUrlController } from '../controller/presign-url'
+import { presignUrlController } from '../controller/presignUrl'
 
 export async function uploadRouter(fastify: FastifyInstance) {
   fastify.get(

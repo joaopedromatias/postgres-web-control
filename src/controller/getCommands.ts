@@ -15,14 +15,20 @@ export async function commandsController(
 
   const { Item } = await dynamoClient.send(getCommands)
 
-  console.log(Item)
-
   let commands = null
 
   if (Item && Item.data.L) {
     commands = Item.data.L.map((command) => {
-      return command.M
-    })
+      if (command.M) {
+        const commandResult = {} as Record<string, string | undefined>
+        const keys = Object.keys(command.M)
+        keys.forEach((key) => {
+          commandResult[key] = command.M ? command.M[key].S : ''
+        })
+        return commandResult
+      }
+      return null
+    }).reverse()
   }
 
   rep.send({ commands })

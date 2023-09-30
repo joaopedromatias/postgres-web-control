@@ -23,8 +23,8 @@ export const Table = ({ rows }: Props) => {
       {tableData.map((row, index) => {
         if (index === 0) {
           return (
-            <>
-              <thead className="font-bold border-b-2" key={index}>
+            <div key={index}>
+              <thead className="font-bold border-b-2">
                 <tr>
                   {row.map((header, index) => (
                     <th className="p-2" key={index}>
@@ -33,7 +33,7 @@ export const Table = ({ rows }: Props) => {
                   ))}
                 </tr>
               </thead>
-            </>
+            </div>
           )
         } else {
           return (
