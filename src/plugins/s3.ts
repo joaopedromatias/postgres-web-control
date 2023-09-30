@@ -2,38 +2,34 @@ import { CreateBucketCommand, PutBucketCorsCommand, S3Client } from '@aws-sdk/cl
 import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
 
 export async function s3Client(fastify: FastifyInstance, _: FastifyPluginOptions) {
-  try {
-    const s3Client = new S3Client({
-      region: 'us-east-1',
-      forcePathStyle: true,
-      endpoint: 'http://s3.localhost.localstack.cloud:4566'
-    })
+  const s3Client = new S3Client({
+    region: 'us-east-1',
+    forcePathStyle: true,
+    endpoint: 'http://s3.localhost.localstack.cloud:4566'
+  })
 
-    const createBucket = new CreateBucketCommand({
-      Bucket: 'csv-files'
-    })
+  const createBucket = new CreateBucketCommand({
+    Bucket: 'csv-files'
+  })
 
-    await s3Client.send(createBucket)
+  await s3Client.send(createBucket)
 
-    const defineCors = new PutBucketCorsCommand({
-      Bucket: 'csv-files',
-      CORSConfiguration: {
-        CORSRules: [
-          {
-            AllowedHeaders: ['*'],
-            AllowedMethods: ['GET', 'PUT'],
-            AllowedOrigins: ['http://localhost:3000']
-          }
-        ]
-      }
-    })
+  const defineCors = new PutBucketCorsCommand({
+    Bucket: 'csv-files',
+    CORSConfiguration: {
+      CORSRules: [
+        {
+          AllowedHeaders: ['*'],
+          AllowedMethods: ['GET', 'PUT'],
+          AllowedOrigins: ['http://localhost:3000']
+        }
+      ]
+    }
+  })
 
-    await s3Client.send(defineCors)
+  await s3Client.send(defineCors)
 
-    fastify.decorate('getS3Client', function () {
-      return s3Client
-    })
-  } catch (err) {
-    console.error(err)
-  }
+  fastify.decorate('getS3Client', function () {
+    return s3Client
+  })
 }
