@@ -1,4 +1,4 @@
-import { DynamoDBClient, CreateTableCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, CreateTableCommand, ListTablesCommand } from '@aws-sdk/client-dynamodb'
 import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
 
 export async function dynamoClient(fastify: FastifyInstance, _: FastifyPluginOptions) {
@@ -8,24 +8,30 @@ export async function dynamoClient(fastify: FastifyInstance, _: FastifyPluginOpt
       endpoint: 'https://dynamo.localhost.localstack.cloud:4566/'
     })
 
-    const createTable = new CreateTableCommand({
-      TableName: 'commands',
-      AttributeDefinitions: [
-        {
-          AttributeName: 'clientId',
-          AttributeType: 'S'
-        }
-      ],
-      KeySchema: [
-        {
-          AttributeName: 'clientId',
-          KeyType: 'HASH'
-        }
-      ],
-      BillingMode: 'PAY_PER_REQUEST'
-    })
+    const listTable = new ListTablesCommand({})
 
-    await dynamoClient.send(createTable)
+    const tables = await dynamoClient.send(listTable)
+
+    if (!tables.TableNames?.includes('commands')) {
+      const createTable = new CreateTableCommand({
+        TableName: 'commands',
+        AttributeDefinitions: [
+          {
+            AttributeName: 'clientId',
+            AttributeType: 'S'
+          }
+        ],
+        KeySchema: [
+          {
+            AttributeName: 'clientId',
+            KeyType: 'HASH'
+          }
+        ],
+        BillingMode: 'PAY_PER_REQUEST'
+      })
+
+      await dynamoClient.send(createTable)
+    }
 
     fastify.decorate('getDynamoClient', function () {
       return dynamoClient

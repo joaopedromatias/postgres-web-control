@@ -15,7 +15,7 @@ export async function queryController(this: Socket, query: string) {
       this.emit('queryResults', { rowCount, rows, command })
 
       const tables = await getTables(this.pgClient)
-      this.emit('tables', tables)
+      return this.emit('tables', tables)
     }
     throw new Error('Not connected to database')
   } catch (err) {
