@@ -4,6 +4,7 @@ import { connectClientToDbController } from '../controller/socket/connectClientT
 import { queryController } from '../controller/socket/query'
 import { disconnectController } from '../controller/socket/disconnect'
 import type { Socket } from 'socket.io'
+import { tableController } from '../controller/socket/tables'
 
 export async function socketRouter(fastify: FastifyInstance, _: FastifyPluginOptions) {
   const io = fastify.getIOServer()
@@ -25,6 +26,10 @@ export async function socketRouter(fastify: FastifyInstance, _: FastifyPluginOpt
 
     socket.on('query', function (this: Socket, query) {
       queryController.apply(this, [query, dynamoClient])
+    })
+
+    socket.on('getTables', function (this: Socket) {
+      tableController.apply(this)
     })
   })
 }

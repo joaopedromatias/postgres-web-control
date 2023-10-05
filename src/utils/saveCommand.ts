@@ -22,7 +22,7 @@ export const saveCommand = async (
   const thisCommandPayload = {
     M: {
       query: { S: query },
-      rowCount: { S: rowCount.toString() },
+      rowCount: { S: (rowCount || 0).toString() },
       command: { S: command },
       timestamp: { S: now }
     }

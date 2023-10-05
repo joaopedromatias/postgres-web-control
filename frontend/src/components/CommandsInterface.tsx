@@ -28,19 +28,29 @@ export const CommandsInterface = () => {
     }
   }, [])
   return (
-    <div className="basis-1/5 max-h-[20vh] m-auto px-5 bg-pink-400 w-full overflow-y-auto">
-      {commands.map((command, index) => {
-        return (
-          <div key={index}>
-            <div className="flex p-3 gap-4">
-              <div>{command.timestamp.split('.')[0]}</div>
-              <div>{command.query}</div>
-              <div>rows affected: {command.rowCount}</div>
-              <div>command type: {command.command}</div>
+    <div className="basis-1/3 max-h-[1/3vh] bg-blue-300 w-full overflow-y-auto">
+      <div className="flex justify-start gap-5 p-3 items-center font-bold">
+        <div className="basis-1/4">timestamp</div>
+        <div className="basis-1/4">query</div>
+        <div className="basis-1/4">command type</div>
+        <div className="basis-1/4">rows affected</div>
+      </div>
+      <hr className="border-t-stone-900" />
+      <div className="h-[80%] overflow-y-auto">
+        {commands.map((command, index) => {
+          return (
+            <div key={index}>
+              <div className="flex justify-start gap-5 p-3 items-center">
+                <div className="basis-1/4">{command.timestamp.split('.')[0]}</div>
+                <div className="basis-1/4">{command.query}</div>
+                <div className="basis-1/4">command type: {command.command}</div>
+                <div className="basis-1/4">rows affected: {command.rowCount}</div>
+              </div>
+              <hr />
             </div>
-          </div>
-        )
-      })}
+          )
+        })}
+      </div>
     </div>
   )
 }

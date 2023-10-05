@@ -33,7 +33,6 @@ export const QueryInterface = () => {
       message = 'no data to be showed'
     } else {
       message = `command ${command} runned successfully, ${rowCount ? rowCount : '0'} rows affected`
-      socket.emit('getTables', query)
     }
     setIsResultAnError(false)
     setMessage(message)
@@ -56,7 +55,7 @@ export const QueryInterface = () => {
   }, [])
 
   return (
-    <div className="basis-4/5 max-h-[80vh] overflow-hidden">
+    <div className="basis-2/3 max-h-[2/3vh] overflow-hidden">
       <div className="flex justify-between items-center h-[10vh] p-4">
         <div className="text-left">Output:</div>
         <div className="mr-0">
@@ -68,7 +67,7 @@ export const QueryInterface = () => {
           <Table rows={tableData} />
         ) : isResultAnError ? (
           <span className="text-red-500 block text-left" role="alert">
-            {message}
+            Error: {message}
           </span>
         ) : (
           <span className="block text-left">{message}</span>

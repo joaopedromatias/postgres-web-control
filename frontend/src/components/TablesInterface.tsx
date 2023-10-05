@@ -21,9 +21,14 @@ export const TablesInterface = () => {
   const [tablesInfo, setTablesInfo] = useState([] as TablesInfo[])
   const [isInsertDataModalOpen, setIsInsertDataModalOpen] = useState(false)
   const [selectedTable, setSelectedTable] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleTableResults = (tables: TablesInfo[]) => {
     setTablesInfo(tables)
+  }
+
+  const handleTableResultsError = (message: string) => {
+    setErrorMessage(message)
   }
 
   const handleDeleteTable = (tableName: string) => {
@@ -34,8 +39,9 @@ export const TablesInterface = () => {
   const handleUploadData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
+      setErrorMessage('')
       const formData = new FormData(e.target as HTMLFormElement)
-      const file = formData.get('file') as File
+      const file = formData.get('file')
       const response = await fetch(
         `http://localhost:3000/upload/presign-url?tableName=${selectedTable}`
       )
@@ -45,21 +51,24 @@ export const TablesInterface = () => {
         body: file
       })
     } catch (err) {
-      console.error(err)
+      setErrorMessage((err as Error).message)
     } finally {
       setIsInsertDataModalOpen(false)
     }
   }
 
   useEffect(() => {
+    socket.emit('getTables')
     socket.on('tables', handleTableResults)
+    socket.on('tablesError', handleTableResultsError)
     return () => {
       socket.removeAllListeners('tables')
+      socket.removeAllListeners('tablesError')
     }
   }, [])
 
   return (
-    <div className="basis-1/5 bg-slate-500 text-left py-3 overflow-x-hidden overflow-y-auto">
+    <div className="basis-1/5 bg-slate-500 text-left py-3 overflow-x-hidden overflow-y-auto relative">
       {isInsertDataModalOpen && (
         <Modal
           title="Upload data"
@@ -124,6 +133,14 @@ export const TablesInterface = () => {
         </div>
       ) : (
         <div className="text-center pt-2">There are no tables yet</div>
+      )}
+      {errorMessage && (
+        <div
+          className="bg-red-200 text-red-500 absolute top-[90%] left-[50%] translate-x-[-50%] z-10"
+          role="alert"
+        >
+          Error: {errorMessage}
+        </div>
       )}
     </div>
   )
