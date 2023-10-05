@@ -1,9 +1,17 @@
 # Database Web Interface
 
-To run the app locally,
+To run the app:
 
 ```
-PORT=<PORT> npm run start       # starts the server on specified port (default to 3000)
+docker-compose up -d       # runs postgres and localstack containers
+```
+
+```
+APP_PORT=<PORT> npm run dev       # starts the server on specified port (default to 3000)
+```
+
+```
+cd frontend && npm run dev       # watch frontend code changes to refresh build
 ```
 
 ## Objective
