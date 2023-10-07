@@ -10,29 +10,26 @@ const Login = () => {
     const inputFormElements = [...formElements].filter((element) => element.tagName === 'INPUT')
     const inputFormElementsLen = inputFormElements.length
 
-    let countHasValueAndIsValid = 0
+    let counterHasValueAndIsValid = 0
     inputFormElements.forEach((element) => {
       const elementValue = (element as HTMLInputElement).value
       const isValid = element.getAttribute('aria-invalid') === 'false'
-      if (elementValue && isValid) countHasValueAndIsValid++
+      if (elementValue && isValid) counterHasValueAndIsValid++
     })
 
-    if (countHasValueAndIsValid === inputFormElementsLen) {
+    if (counterHasValueAndIsValid === inputFormElementsLen) {
       return setIsDisabled(false)
     }
     setIsDisabled(true)
   }
 
   const handleFormSubmit = (e: FormEvent) => {
-    const formElements = (e.target as HTMLFormElement).elements
-    const inputFormElements = [...formElements].filter((element) => element.tagName === 'INPUT')
-    inputFormElements.forEach((element) => {
-      const elementValue = (element as HTMLInputElement).value
-      const elementName = element.getAttribute('name')
-      if (elementName && elementValue) {
-        window.sessionStorage.setItem(elementName, elementValue)
-      }
-    })
+    const formData = new FormData(e.target as HTMLFormElement)
+    for (const entry of formData.entries()) {
+      const key = entry[0]
+      const value = String(entry[1]) || ''
+      window.sessionStorage.setItem(key, value)
+    }
   }
 
   useEffect(() => {
