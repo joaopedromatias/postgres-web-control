@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify'
-import { commandsController } from '../controller/getCommands'
+import { commandsController } from '../controller/commands'
 
 export async function commandsRouter(fastify: FastifyInstance) {
   fastify.get(
