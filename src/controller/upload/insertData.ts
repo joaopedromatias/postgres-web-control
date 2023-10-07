@@ -8,12 +8,13 @@ export async function insertDataController(
   rep: FastifyReply
 ) {
   try {
-    const { tableName, insertMode } = req.query as {
+    const { tableName, insertMode, socketId } = req.query as {
       tableName: string
       insertMode: 'replace' | 'append'
+      socketId: string
     }
     const s3Client = this.getS3Client()
-    const command = new GetObjectCommand({ Bucket: 'csv-files', Key: tableName })
+    const command = new GetObjectCommand({ Bucket: 'csv-files', Key: socketId + '/' + tableName })
 
     const response = await s3Client.send(command)
     const stream = response.Body
@@ -22,7 +23,7 @@ export async function insertDataController(
       const io = this.getIOServer()
       io.fetchSockets()
         .then((s) => {
-          console.log(s[0].id)
+          console.log(s[0].id) // get correct socket instance by id
           return 's'
         })
         .catch((err) => {

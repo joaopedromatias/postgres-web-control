@@ -10,9 +10,10 @@ export async function uploadRouter(fastify: FastifyInstance) {
         querystring: {
           type: 'object',
           properties: {
-            tableName: { type: 'string' }
+            tableName: { type: 'string' },
+            socketId: { type: 'string' }
           },
-          required: ['tableName']
+          required: ['tableName', 'socketId']
         }
       }
     },
@@ -26,9 +27,10 @@ export async function uploadRouter(fastify: FastifyInstance) {
           type: 'object',
           properties: {
             insertMode: { type: 'string', enum: ['replace', 'append'] },
-            tableName: { type: 'string' }
+            tableName: { type: 'string' },
+            socketId: { type: 'string' }
           },
-          required: ['insertMode', 'tableName']
+          required: ['insertMode', 'tableName', 'socketId']
         }
       }
     },

@@ -8,9 +8,9 @@ export async function presignUrlController(
   rep: FastifyReply
 ) {
   try {
-    const { tableName } = req.query as { tableName: string }
+    const { tableName, socketId } = req.query as { tableName: string; socketId: string }
     const s3Client = this.getS3Client()
-    const command = new PutObjectCommand({ Bucket: 'csv-files', Key: tableName })
+    const command = new PutObjectCommand({ Bucket: 'csv-files', Key: socketId + '/' + tableName })
     const presignedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 })
     rep.status(200)
     rep.send({ presignedUrl })

@@ -42,7 +42,9 @@ export const TablesInterface = () => {
       setErrorMessage('')
       const formData = new FormData(e.target as HTMLFormElement)
       const file = formData.get('file')
-      const response = await fetch(`/upload/presign-url?tableName=${selectedTable}`)
+      const response = await fetch(
+        `/upload/presign-url?tableName=${selectedTable}&socketId=${socket.id}`
+      )
       const { presignedUrl } = await response.json()
       await fetch(presignedUrl, {
         method: 'PUT',
@@ -50,7 +52,9 @@ export const TablesInterface = () => {
       })
       const insertMode = formData.get('insert-mode')
       await fetch(
-        `/upload/insert-data?insertMode=${insertMode?.toString()}&tableName=${selectedTable}`
+        `/upload/insert-data?insertMode=${insertMode?.toString()}&tableName=${selectedTable}&socketId=${
+          socket.id
+        }`
       )
     } catch (err) {
       setErrorMessage((err as Error).message)
