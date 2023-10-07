@@ -33,7 +33,7 @@ export const TablesInterface = () => {
 
   const handleDeleteTable = (tableName: string) => {
     const deleteTableQuery = `DROP TABLE IF EXISTS ${tableName}`
-    socket.emit('query', deleteTableQuery)
+    socket.emit('query', deleteTableQuery, window.sessionStorage.getItem('sessionId'))
   }
 
   const handleUploadData = async (e: React.FormEvent<HTMLFormElement>) => {

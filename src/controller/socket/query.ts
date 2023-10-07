@@ -3,13 +3,17 @@ import { getTables } from '../../utils/getTables'
 import type { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { saveCommand } from '../../utils/saveCommand'
 
-export async function queryController(this: Socket, query: string, dynamoClient: DynamoDBClient) {
+export async function queryController(
+  this: Socket,
+  query: string,
+  dynamoClient: DynamoDBClient,
+  sessionId: string
+) {
   try {
     if (this.isConnectedToDb && this.pgClient) {
       const { rowCount, rows, command } = await this.pgClient.query(query)
 
-      const clientId = this.id
-      await saveCommand(dynamoClient, clientId, query, rowCount, command)
+      await saveCommand(dynamoClient, sessionId, query, rowCount, command)
 
       this.emit('queryResults', { rowCount, rows, command })
 

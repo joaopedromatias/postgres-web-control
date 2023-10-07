@@ -16,13 +16,13 @@ export async function dynamoClient(fastify: FastifyInstance, _: FastifyPluginOpt
       TableName: 'commands',
       AttributeDefinitions: [
         {
-          AttributeName: 'clientId',
+          AttributeName: 'sessionId',
           AttributeType: 'S'
         }
       ],
       KeySchema: [
         {
-          AttributeName: 'clientId',
+          AttributeName: 'sessionId',
           KeyType: 'HASH'
         }
       ],

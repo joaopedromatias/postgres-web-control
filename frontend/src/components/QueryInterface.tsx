@@ -19,7 +19,7 @@ export const QueryInterface = () => {
 
   const handleSend = () => {
     window.sessionStorage.setItem('query', query)
-    socket.emit('query', query)
+    socket.emit('query', query, window.sessionStorage.getItem('sessionId'))
   }
 
   const handleQueryResults = ({ command, rowCount, rows }: QueryResults) => {

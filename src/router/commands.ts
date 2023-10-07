@@ -9,9 +9,9 @@ export async function commandsRouter(fastify: FastifyInstance) {
         querystring: {
           type: 'object',
           properties: {
-            clientId: { type: 'string' }
+            sessionId: { type: 'string' }
           },
-          required: ['clientId']
+          required: ['sessionId']
         }
       }
     },

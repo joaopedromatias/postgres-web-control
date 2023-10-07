@@ -7,11 +7,11 @@ export async function commandsController(
   rep: FastifyReply
 ) {
   try {
-    const { clientId } = req.query as { clientId: string }
+    const { sessionId } = req.query as { sessionId: string }
     const dynamoClient = this.getDynamoClient()
     const getCommands = new GetItemCommand({
       TableName: 'commands',
-      Key: { clientId: { S: clientId } }
+      Key: { sessionId: { S: sessionId } }
     })
 
     const { Item } = await dynamoClient.send(getCommands)

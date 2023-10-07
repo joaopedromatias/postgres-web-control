@@ -14,7 +14,9 @@ export const CommandsInterface = () => {
   const [commands, setCommands] = useState<Command[]>([])
 
   const handleCommandsUpdate = async () => {
-    const response = await fetch(`/commands?clientId=${socket.id}`)
+    const response = await fetch(
+      `/commands?sessionId=${window.sessionStorage.getItem('sessionId')}`
+    )
     const { commands } = await response.json()
     setCommands(commands)
   }
@@ -22,7 +24,7 @@ export const CommandsInterface = () => {
   useEffect(() => {
     socket.on('queryResults', handleCommandsUpdate)
     socket.on('queryResultsError', handleCommandsUpdate)
-    fetch(`/commands?clientId=${socket.id}`)
+    fetch(`/commands?sessionId=${window.sessionStorage.getItem('sessionId')}`)
       .then((res) => res.json())
       .then(({ commands }) => {
         if (commands) setCommands(commands)

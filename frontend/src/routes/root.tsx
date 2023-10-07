@@ -59,7 +59,12 @@ const Index = () => {
   useEffect(() => {
     isConnectedToDbPromise
       .then((isConnectedToDb: boolean) => {
-        if (isConnectedToDb) return navigate('/app')
+        if (isConnectedToDb) {
+          const currentSessionId = window.sessionStorage.getItem('sessionId')
+          if (!currentSessionId)
+            window.sessionStorage.setItem('sessionId', String(new Date().getTime()))
+          return navigate('/app')
+        }
         navigate('/login')
       })
       .catch((err) => {

@@ -7,7 +7,7 @@ import {
 
 export const saveCommand = async (
   dynamoClient: DynamoDBClient,
-  clientId: string,
+  sessionId: string,
   query: string,
   rowCount: number,
   command: string
@@ -15,7 +15,7 @@ export const saveCommand = async (
   const now = new Date().toISOString()
   const getItemsCommand = new GetItemCommand({
     TableName: 'commands',
-    Key: { clientId: { S: clientId } }
+    Key: { sessionId: { S: sessionId } }
   })
 
   const allCommands = [] as AttributeValue[]
@@ -39,7 +39,7 @@ export const saveCommand = async (
   allCommands.push(thisCommandPayload)
 
   const dynamoPayload = {
-    clientId: { S: clientId },
+    sessionId: { S: sessionId },
     data: {
       L: allCommands
     }

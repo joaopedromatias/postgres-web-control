@@ -24,8 +24,8 @@ export async function socketRouter(fastify: FastifyInstance, _: FastifyPluginOpt
       connectClientToDbController.apply(this, [parameters])
     })
 
-    socket.on('query', function (this: Socket, query) {
-      queryController.apply(this, [query, dynamoClient])
+    socket.on('query', function (this: Socket, query, sessionId) {
+      queryController.apply(this, [query, dynamoClient, sessionId])
     })
 
     socket.on('getTables', function (this: Socket) {
