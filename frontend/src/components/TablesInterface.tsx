@@ -3,7 +3,7 @@ import { useOutletContext } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
 import { Delete } from './Icons/Delete'
 import { Upload } from './Icons/Upload'
-import { Modal } from './Modal'
+import { Modal } from './shared/Modal'
 
 interface TablesInfo {
   schemaname: string
@@ -27,8 +27,8 @@ export const TablesInterface = () => {
     setTablesInfo(tables)
   }
 
-  const handleTableResultsError = (message: string) => {
-    setErrorMessage(message)
+  const handleTableResultsError = (errorMessage: string) => {
+    setErrorMessage(errorMessage)
   }
 
   const handleDeleteTable = (tableName: string) => {

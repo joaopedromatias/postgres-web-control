@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { Error } from './components/Error'
-import { Loading } from './components/Loading'
-import { io, Socket } from 'socket.io-client'
+import { Socket, io } from 'socket.io-client'
+import { Error } from './components/shared/Error'
+import { Loading } from './components/shared/Loading'
+import * as app from './routes/app'
 import * as login from './routes/login'
 import * as root from './routes/root'
-import * as app from './routes/app'
 
 const wrapRouter = (socket: Socket) => {
   return createBrowserRouter([

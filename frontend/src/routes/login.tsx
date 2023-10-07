@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react'
-import { Button } from '../components/Button'
-import { Input } from '../components/Input'
+import { Input } from '../components/shared/Input'
+import { Button } from '../components/shared/Button'
 
 const Login = () => {
   const [isDisabled, setIsDisabled] = useState(true)

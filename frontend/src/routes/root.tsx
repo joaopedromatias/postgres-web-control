@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Layout } from '../components/Layout'
 import { LoaderFunctionArgs, Outlet, defer, useLoaderData, useNavigate } from 'react-router-dom'
-import { Loading } from '../components/Loading'
 import { Socket } from 'socket.io-client'
+import { Layout } from '../components/shared/Layout'
+import { Loading } from '../components/shared/Loading'
 
 export const loader = (socket: Socket, { request }: LoaderFunctionArgs) => {
   const url = new URL(request.url)

@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { Socket } from 'socket.io-client'
-import { Button } from './Button'
-import { Table } from './Table'
+import { Table } from './shared/Table'
+import { Button } from './shared/Button'
 
 type QueryResults = {
   rows: Record<string, string>[]
@@ -24,19 +24,23 @@ export const QueryInterface = () => {
 
   const handleQueryResults = ({ command, rowCount, rows }: QueryResults) => {
     const isResultATable = rows.length > 0
+    let message = ''
+
     if (isResultATable) {
-      return setTableData(rows)
+      setTableData(rows)
+    } else {
+      setTableData([])
+      if (command.toLowerCase() === 'select') {
+        message = 'no data to be showed'
+      } else {
+        message = `command ${command} runned successfully, ${
+          rowCount ? rowCount : '0'
+        } rows affected`
+      }
     }
 
-    let message = ''
-    if (command.toLowerCase() === 'select') {
-      message = 'no data to be showed'
-    } else {
-      message = `command ${command} runned successfully, ${rowCount ? rowCount : '0'} rows affected`
-    }
     setIsResultAnError(false)
     setMessage(message)
-    setTableData([])
   }
 
   const handleQueryResultsError = (errorMessage: string) => {
@@ -64,13 +68,14 @@ export const QueryInterface = () => {
       </div>
       <div className="h-[40vh] px-4 overflow-x-auto">
         {tableData.length > 0 ? (
-          <Table rows={tableData} />
-        ) : isResultAnError ? (
-          <span className="text-red-500 block text-left" role="alert">
-            Error: {message}
-          </span>
+          <Table data={tableData} />
         ) : (
-          <span className="block text-left">{message}</span>
+          <span
+            className={`block text-left ${isResultAnError ? 'text-red-500' : ''}`}
+            role={isResultAnError ? 'alert' : ''}
+          >
+            {isResultAnError && 'Error: '} {message}
+          </span>
         )}
       </div>
       <textarea
