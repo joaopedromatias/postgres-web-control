@@ -42,14 +42,16 @@ export const TablesInterface = () => {
       setErrorMessage('')
       const formData = new FormData(e.target as HTMLFormElement)
       const file = formData.get('file')
-      const response = await fetch(
-        `http://localhost:3000/upload/presign-url?tableName=${selectedTable}`
-      )
+      const response = await fetch(`/upload/presign-url?tableName=${selectedTable}`)
       const { presignedUrl } = await response.json()
       await fetch(presignedUrl, {
         method: 'PUT',
         body: file
       })
+      const insertMode = formData.get('insert-mode')
+      await fetch(
+        `/upload/insert-data?insertMode=${insertMode?.toString()}&tableName=${selectedTable}`
+      )
     } catch (err) {
       setErrorMessage((err as Error).message)
     } finally {
@@ -87,8 +89,8 @@ export const TablesInterface = () => {
                 <label htmlFor="append">append data</label>
               </div>
               <div className="flex gap-1">
-                <input type="radio" name="insert-mode" id="override" value="override" />
-                <label htmlFor="override">override existing data</label>
+                <input type="radio" name="insert-mode" id="replace" value="replace" />
+                <label htmlFor="replace">replace data</label>
               </div>
             </div>
           </div>
