@@ -7,11 +7,11 @@ docker-compose up -d       # runs postgres and localstack containers
 ```
 
 ```
-APP_PORT=<PORT> npm run dev       # starts the server on specified port (default to 3000)
+APP_PORT=<PORT> npm run dev       # starts the server on specified port (default is 3000)
 ```
 
 ```
-cd frontend && npm run dev       # watch frontend code changes to refresh build
+cd frontend && npm run dev       # watch frontend code changes to refresh build files
 ```
 
 ## Objective
@@ -24,8 +24,10 @@ The objective of this app is to provide a web interface that allows users to man
 
 - **Front End**: React, TailwindCSS, React Router
 
-- **Back End**: Fastify, AWS SDK, Socket, Local Stack
+- **Back End**: Fastify, Socket, Streaming, AWS DynamoDB, AWS S3
 
-- **Virtualization**: Docker Compose
+- **Database**: PostgreSQL
 
-- **Development Environment**: ESLint, Prettier
+- **Virtualization**: Docker
+
+- **Development Environment**: ESLint, Prettier, Nodemon
