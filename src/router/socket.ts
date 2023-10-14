@@ -5,6 +5,7 @@ import { queryController } from '../controller/socket/query'
 import { disconnectController } from '../controller/socket/disconnect'
 import type { Socket } from 'socket.io'
 import { tableController } from '../controller/socket/tables'
+import { insertDataController } from '../controller/socket/insertData'
 
 export async function socketRouter(fastify: FastifyInstance, _: FastifyPluginOptions) {
   const io = fastify.getIOServer()
@@ -12,6 +13,7 @@ export async function socketRouter(fastify: FastifyInstance, _: FastifyPluginOpt
   io.on('connection', (socket) => {
     console.log(`The client ${socket.id} connected`)
     const dynamoClient = fastify.getDynamoClient()
+    const s3Client = fastify.getS3Client()
 
     socket.pgClient = null as Client | null
     socket.isConnectedToDb = false
@@ -30,6 +32,10 @@ export async function socketRouter(fastify: FastifyInstance, _: FastifyPluginOpt
 
     socket.on('getTables', function (this: Socket) {
       tableController.apply(this)
+    })
+
+    socket.on('insertData', function (this: Socket, insertMode, tableName) {
+      insertDataController.apply(this, [insertMode, tableName, s3Client])
     })
   })
 }

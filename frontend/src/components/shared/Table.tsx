@@ -39,7 +39,7 @@ export const Table = ({ data }: Props) => {
             <tr>
               {row.map((value, index) => (
                 <td className="p-2" key={index}>
-                  {value ? value.toString() : '-'}
+                  {value !== '' && value !== null ? value.toString() : '-'}
                 </td>
               ))}
             </tr>

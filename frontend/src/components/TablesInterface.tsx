@@ -21,14 +21,16 @@ export const TablesInterface = () => {
   const [tablesInfo, setTablesInfo] = useState([] as TablesInfo[])
   const [isInsertDataModalOpen, setIsInsertDataModalOpen] = useState(false)
   const [selectedTable, setSelectedTable] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [message, setMessage] = useState('')
+  const [isMessageError, setIsMessageError] = useState(false)
 
   const handleTableResults = (tables: TablesInfo[]) => {
     setTablesInfo(tables)
   }
 
   const handleTableResultsError = (errorMessage: string) => {
-    setErrorMessage(errorMessage)
+    setIsMessageError(true)
+    setMessage(errorMessage)
   }
 
   const handleDeleteTable = (tableName: string) => {
@@ -39,7 +41,6 @@ export const TablesInterface = () => {
   const handleUploadData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      setErrorMessage('')
       const formData = new FormData(e.target as HTMLFormElement)
       const file = formData.get('file')
       const response = await fetch(
@@ -51,25 +52,37 @@ export const TablesInterface = () => {
         body: file
       })
       const insertMode = formData.get('insert-mode')
-      await fetch(
-        `/upload/insert-data?insertMode=${insertMode?.toString()}&tableName=${selectedTable}&socketId=${
-          socket.id
-        }`
-      )
+
+      socket.emit('insertData', insertMode ? insertMode.toString() : '', selectedTable)
     } catch (err) {
-      setErrorMessage((err as Error).message)
+      setIsMessageError(true)
+      setMessage((err as Error).message)
     } finally {
       setIsInsertDataModalOpen(false)
     }
+  }
+
+  const handleDataInserted = () => {
+    setIsMessageError(false)
+    setMessage('data sucessfully inserted')
+  }
+
+  const handleDataInsertedError = (errorMessage: string) => {
+    setIsMessageError(true)
+    setMessage(errorMessage)
   }
 
   useEffect(() => {
     socket.emit('getTables')
     socket.on('tables', handleTableResults)
     socket.on('tablesError', handleTableResultsError)
+    socket.on('dataInserted', handleDataInserted)
+    socket.on('dataInsertedError', handleDataInsertedError)
     return () => {
       socket.removeAllListeners('tables')
       socket.removeAllListeners('tablesError')
+      socket.removeAllListeners('dataInserted')
+      socket.removeAllListeners('dataInsertedError')
     }
   }, [])
 
@@ -140,12 +153,18 @@ export const TablesInterface = () => {
       ) : (
         <div className="text-center pt-2">There are no tables yet</div>
       )}
-      {errorMessage && (
+      {message && (
         <div
-          className="bg-red-200 text-red-500 absolute top-[90%] left-[50%] translate-x-[-50%] z-10"
-          role="alert"
+          className={`${
+            isMessageError ? 'bg-red-200 text-red-500' : 'bg-emerald-200 text-green-700'
+          } absolute bottom-[20%] left-[50%] translate-x-[-50%] z-10 flex items-center justify-between gap-6 p-3 rounded-md`}
         >
-          Error: {errorMessage}
+          <div role="alert" className="basis-5">
+            {isMessageError && 'Error: '} {message}
+          </div>
+          <button onClick={() => setMessage('')} className="basis-1">
+            x
+          </button>
         </div>
       )}
     </div>

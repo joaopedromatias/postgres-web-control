@@ -1,0 +1,11 @@
+id,name,is_wizard,house_id
+1,draco,true,2
+2,duda,false,
+3,filch,false,
+4,neville,true,1
+5,ron,true,1
+6,hermione,true,1
+7,cedrico,true,3
+8,walter,false,
+9,sirius,true,1
+10,dumbledore,true,1
