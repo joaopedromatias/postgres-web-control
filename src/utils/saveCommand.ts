@@ -12,7 +12,7 @@ export const saveCommand = async (
   rowCount: number,
   command: string
 ) => {
-  const now = new Date().toISOString()
+  const now = new Date().toISOString().replace('T', ' ')
   const getItemsCommand = new GetItemCommand({
     TableName: 'commands',
     Key: { sessionId: { S: sessionId } }
