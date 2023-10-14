@@ -18,7 +18,9 @@ export const CommandsInterface = () => {
       `/commands?sessionId=${window.sessionStorage.getItem('sessionId')}`
     )
     const { commands } = await response.json()
-    setCommands(commands)
+    if (commands) {
+      setCommands(commands)
+    }
   }
 
   useEffect(() => {

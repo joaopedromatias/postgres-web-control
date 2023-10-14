@@ -34,7 +34,7 @@ const start = async () => {
       reply.send(error)
     })
 
-    fastify.listen({ port: Number(process.env.PORT) || 3000 }, (err, address) => {
+    fastify.listen({ port: Number(process.env.PORT) || 3000, host: '0.0.0.0' }, (err, address) => {
       if (err) {
         throw err
       } else {
