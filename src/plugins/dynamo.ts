@@ -4,7 +4,11 @@ import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
 export async function dynamoClient(fastify: FastifyInstance, _: FastifyPluginOptions) {
   const dynamoClient = new DynamoDBClient({
     region: 'us-east-1',
-    endpoint: 'https://dynamo.localhost.localstack.cloud:4566/'
+    endpoint: 'http://localstack:4566',
+    credentials: {
+      accessKeyId: 'foo',
+      secretAccessKey: 'bar'
+    }
   })
 
   const listTable = new ListTablesCommand({})

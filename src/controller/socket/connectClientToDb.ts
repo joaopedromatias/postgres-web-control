@@ -17,7 +17,7 @@ export async function connectClientToDbController(
       port: Number(port),
       password,
       user: username,
-      host: '0.0.0.0'
+      host: 'db'
     })
 
     await this.pgClient.connect()

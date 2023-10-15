@@ -46,4 +46,8 @@ const start = async () => {
   }
 }
 
-start()
+const awaitForAllContainersToBeReadyMs = 15000
+
+setTimeout(() => {
+  start()
+}, awaitForAllContainersToBeReadyMs)

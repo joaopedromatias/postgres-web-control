@@ -1,5 +1,14 @@
 version: '3.9'
 services:
+  app:
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+      - localstack
+    environment:
+      - PORT=8080
   db:
     image: postgres
     environment:
@@ -11,6 +20,6 @@ services:
     ports:
       - 4566:4566
     environment:
-      - SERVICES=lambda,s3
+      - SERVICES=dynamo,s3
       - AWS_DEFAULT_REGION=us-east-1
-# docker-compose up -d --remove-orphans
+      - HOSTNAME_EXTERNAL=localstack
