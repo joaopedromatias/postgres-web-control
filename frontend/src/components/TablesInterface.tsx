@@ -47,6 +47,7 @@ export const TablesInterface = () => {
         `/upload/presign-url?tableName=${selectedTable}&socketId=${socket.id}`
       )
       const { presignedUrl } = await response.json()
+
       await fetch(presignedUrl, {
         method: 'PUT',
         body: file

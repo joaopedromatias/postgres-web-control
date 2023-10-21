@@ -11,7 +11,10 @@ export async function presignUrlController(
     const { tableName, socketId } = req.query as { tableName: string; socketId: string }
     const s3Client = this.getS3Client()
     const command = new PutObjectCommand({ Bucket: 'csv-files', Key: socketId + '/' + tableName })
-    const presignedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 })
+    let presignedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 })
+    if (process.env.NODE_ENV === 'production' && process.env.LOCALSTACK_ENDPOINT) {
+      presignedUrl = presignedUrl.replace(process.env.LOCALSTACK_ENDPOINT, 'http://localhost:4566')
+    }
     rep.status(200)
     rep.send({ presignedUrl })
   } catch (err) {

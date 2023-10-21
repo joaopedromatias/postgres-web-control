@@ -16,7 +16,7 @@ dotenv.config()
 const fastify = Fastify({ ignoreTrailingSlash: true })
 const io = new Server(fastify.server)
 
-const start = async () => {
+export const startServer = async () => {
   try {
     await fastify.register(fastifyHelmet)
 
@@ -37,13 +37,17 @@ const start = async () => {
       reply.send(error)
     })
 
-    fastify.listen({ port: Number(process.env.PORT), host: '0.0.0.0' }, (err, address) => {
-      if (err) {
-        throw err
-      } else {
-        console.log(`server is listening on ${address}`)
-      }
-    })
+    if (process.env.NODE_ENV !== 'test') {
+      fastify.listen({ port: Number(process.env.PORT), host: '0.0.0.0' }, (err, address) => {
+        if (err) {
+          throw err
+        } else {
+          console.log(`server is listening on ${address}`)
+        }
+      })
+    }
+
+    return fastify
   } catch (err) {
     console.error(err)
   }
@@ -51,10 +55,9 @@ const start = async () => {
 
 if (process.env.NODE_ENV === 'production') {
   const awaitForAllContainersToBeReadyMs = 15000
-
   setTimeout(() => {
-    start()
+    startServer()
   }, awaitForAllContainersToBeReadyMs)
-} else {
-  start()
+} else if (process.env.NODE_ENV === 'development') {
+  startServer()
 }
