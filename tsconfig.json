@@ -20,7 +20,7 @@
     "skipLibCheck": true,
     "lib": ["esnext"]
   },
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "types.ts"],
   "ts-node": {
     "files": true
   }

@@ -3,13 +3,8 @@ import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
 
 export async function s3Client(fastify: FastifyInstance, _: FastifyPluginOptions) {
   const s3Client = new S3Client({
-    region: 'us-east-1',
     forcePathStyle: true,
-    endpoint: 'http://localstack:4566',
-    credentials: {
-      accessKeyId: 'foo',
-      secretAccessKey: 'bar'
-    }
+    endpoint: process.env.LOCALSTACK_ENDPOINT
   })
 
   const createBucket = new CreateBucketCommand({
@@ -25,7 +20,7 @@ export async function s3Client(fastify: FastifyInstance, _: FastifyPluginOptions
         {
           AllowedHeaders: ['*'],
           AllowedMethods: ['GET', 'PUT'],
-          AllowedOrigins: ['http://localhost:3000']
+          AllowedOrigins: [`http://localhost:${process.env.PORT}`]
         }
       ]
     }

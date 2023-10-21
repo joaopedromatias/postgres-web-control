@@ -9,6 +9,9 @@ import { staticfFiles } from './plugins/staticFiles'
 import { s3Client } from './plugins/s3'
 import { dynamoClient } from './plugins/dynamo'
 import { commandsRouter } from './router/commands'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const fastify = Fastify({ ignoreTrailingSlash: true })
 const io = new Server(fastify.server)
@@ -34,7 +37,7 @@ const start = async () => {
       reply.send(error)
     })
 
-    fastify.listen({ port: Number(process.env.PORT) || 3000, host: '0.0.0.0' }, (err, address) => {
+    fastify.listen({ port: Number(process.env.PORT), host: '0.0.0.0' }, (err, address) => {
       if (err) {
         throw err
       } else {
@@ -46,8 +49,12 @@ const start = async () => {
   }
 }
 
-const awaitForAllContainersToBeReadyMs = 15000
+if (process.env.NODE_ENV === 'production') {
+  const awaitForAllContainersToBeReadyMs = 15000
 
-setTimeout(() => {
+  setTimeout(() => {
+    start()
+  }, awaitForAllContainersToBeReadyMs)
+} else {
   start()
-}, awaitForAllContainersToBeReadyMs)
+}

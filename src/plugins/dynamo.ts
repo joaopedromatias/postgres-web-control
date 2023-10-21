@@ -3,19 +3,14 @@ import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
 
 export async function dynamoClient(fastify: FastifyInstance, _: FastifyPluginOptions) {
   const dynamoClient = new DynamoDBClient({
-    region: 'us-east-1',
-    endpoint: 'http://localstack:4566',
-    credentials: {
-      accessKeyId: 'foo',
-      secretAccessKey: 'bar'
-    }
+    endpoint: process.env.LOCALSTACK_ENDPOINT
   })
 
-  const listTable = new ListTablesCommand({})
+  const listTables = new ListTablesCommand({})
 
-  const tables = await dynamoClient.send(listTable)
+  const tables = await dynamoClient.send(listTables)
 
-  if (!tables.TableNames?.includes('commands')) {
+  if (process.env.NODE_ENV === 'production' || !tables.TableNames?.includes('commands')) {
     const createTable = new CreateTableCommand({
       TableName: 'commands',
       AttributeDefinitions: [
