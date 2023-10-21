@@ -4,6 +4,36 @@
 
 The objective of this app is to provide a local web interface that allows developers to manage a postgres database by running queries and uploading csv files to be inserted into the tables.
 
+## Technologies 🌐
+
+- **Programming Language**: TypeScript
+
+- **Front End**: React, React Router, TailwindCSS, Vite
+
+- **Back End**: Fastify, Web Socket, Streaming, AWS DynamoDB, AWS S3
+
+- **Database**: Postgres
+
+- **Infrastructure**: LocalStack
+
+- **Virtualization**: Docker
+
+- **Development Environment**: ESLint, Prettier, Nodemon
+
+## Demonstration 📺
+
+Part 1️⃣
+
+https://github.com/joaopedromatias/postgres-web-control/assets/90068133/86a4a35c-148e-43d1-acb3-4797442d6d4a
+
+Part 2️⃣
+
+https://github.com/joaopedromatias/postgres-web-control/assets/90068133/d8e2293e-862f-4f28-9b7b-be3c38283e37
+
+Part 3️⃣
+
+https://github.com/joaopedromatias/postgres-web-control/assets/90068133/9832b468-16eb-4163-8060-e7cab706cad6
+
 ## Running 🏃
 
 To run the app:
@@ -55,19 +85,3 @@ Both the DynamoDB table and the S3 bucket are created on the server start, using
 The web socket communication allows events to flow from client to server and from server to client, which makes it possible to build a more reactive UI. For example, the tables information are resent from the server to the client after each sucessfull query, which updates the UI if a new table is found or if a table was deleted.
 
 The more challenging part of the development was to make the app run inside a docker container. I realized after a long debugging that I needed to wait for some seconds to run the app's code so the localstack endpoints would be ready to accept connections.
-
-## Technologies 🌐
-
-- **Programming Language**: TypeScript
-
-- **Front End**: React, React Router, TailwindCSS, Vite
-
-- **Back End**: Fastify, Web Socket, Streaming, AWS DynamoDB, AWS S3
-
-- **Database**: Postgres
-
-- **Infrastructure**: LocalStack
-
-- **Virtualization**: Docker
-
-- **Development Environment**: ESLint, Prettier, Nodemon
