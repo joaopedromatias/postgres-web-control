@@ -26,6 +26,7 @@ export async function commandsController(
           keys.forEach((key) => {
             commandResult[key] = command.M ? command.M[key].S : ''
           })
+
           return commandResult
         }
         return null

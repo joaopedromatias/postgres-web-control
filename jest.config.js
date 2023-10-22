@@ -6,6 +6,7 @@ module.exports = {
   detectOpenHandles: true,
   collectCoverage: true,
   collectCoverageFrom: ['/src/**/*.{ts}'],
+  setupFilesAfterEnv: ['./tests/mocks.ts'],
   transform: {
     '^.+\\.ts$': 'ts-jest'
   },

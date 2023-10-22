@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { startServer } from '../src/app'
 
-describe('upload files', () => {
+describe('upload files route', () => {
   let app = {} as FastifyInstance
 
   beforeAll(async () => {
