@@ -23,6 +23,7 @@
       }
     }
   },
+  "ignorePatterns": ["node_modules/", "frontend/"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 12,
