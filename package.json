@@ -8,6 +8,8 @@
     "build": "tsc",
     "start": "node ./dist/src/app.js",
     "test": "NODE_ENV=test jest --detectOpenHandles --forceExit --coverage",
+    "test:e2e": "npx playwright test --ui",
+    "test:e2e:ci": "sleep 15 && npx playwright test --ui",
     "lint": "eslint ."
   },
   "keywords": [],
@@ -28,6 +30,7 @@
     "socket.io": "^4.7.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.39.0",
     "@types/jest": "^29.5.4",
     "@types/node": "^20.5.7",
     "@types/pg": "^8.10.2",

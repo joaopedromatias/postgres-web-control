@@ -1,0 +1,31 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  e2e:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - uses: isbang/compose-action@v1.5.1
+        with:
+          compose-file: './docker-compose.yml'
+
+      - name: install dependencies
+        run: npm ci
+
+      - name: install playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: run playwright e2e tests
+        run: npm run test:e2e:ci

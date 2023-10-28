@@ -55,7 +55,7 @@ const Login = () => {
       <Input name="database" placeholder="database name..." type="text" />
       <Input name="username" placeholder="username..." type="text" />
       <Input name="password" placeholder="password..." type="password" />
-      <Input name="port" placeholder="port..." type="number" />
+      <Input name="port" placeholder="port..." type="text" />
       <Button type="submit" isDisabled={isDisabled} text={'Login'} />
     </form>
   )

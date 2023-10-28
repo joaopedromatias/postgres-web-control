@@ -99,7 +99,13 @@ export const TablesInterface = () => {
         >
           <div className="flex flex-col items-start py-4 gap-4">
             <div>
-              <input type="file" accept="csv" name="file" placeholder="file..." />
+              <input
+                type="file"
+                accept="csv"
+                name="file"
+                aria-label="choose file"
+                placeholder="file..."
+              />
             </div>
             <div className="flex justify-start gap-4">
               <div className="flex gap-1">
