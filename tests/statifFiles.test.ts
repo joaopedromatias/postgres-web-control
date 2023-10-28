@@ -22,7 +22,7 @@ describe('static files delivering', () => {
   it('should return an HTML document file for an unmapped root', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: '/'
+      url: '/anything'
     })
 
     expect(response.statusCode).toBe(200)
