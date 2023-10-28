@@ -44,7 +44,11 @@ test('perform login and create table', async ({ page }) => {
 
   expect(dataInputFile).not.toBeNull()
 
-  await dataInputFile!.setInputFiles(path.join(process.cwd(), 'csv-samples', 'houses.csv'))
+  await dataInputFile!.setInputFiles(
+    process.env.CI
+      ? path.join(process.env.GITHUB_WORKSPACE || '', 'csv-samples', 'houses.csv')
+      : path.join(process.cwd(), 'csv-samples', 'houses.csv')
+  )
 
   const uploadDataBtn = page.getByRole('button', { name: /upload$/i })
 
@@ -58,7 +62,7 @@ test('perform login and create table', async ({ page }) => {
 
   const houseName = page.getByText('gryffindor')
 
-  expect(houseName).toBeVisible()
+  await expect(houseName).toBeVisible()
 })
 
 async function sleep(seconds: number) {

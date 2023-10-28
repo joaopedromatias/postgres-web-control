@@ -18,6 +18,8 @@ The objective of this app is to provide a local web interface that allows develo
 
 - **Virtualization**: Docker
 
+- **Testing**: Jest, Playwright (E2E)
+
 - **Development Environment**: ESLint, Prettier, Nodemon
 
 ## Demonstration 📺
